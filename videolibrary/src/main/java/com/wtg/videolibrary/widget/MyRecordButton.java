@@ -214,7 +214,7 @@ public class MyRecordButton extends View {
         mMinRectWidth = mMaxRectWidth * 0.6f;
 
         mMinCircleRadius = mMaxRectWidth / 2 + mMinCircleStrokeWidth + ScreenUtils.dip2px(mContext, 5);
-        mMaxCircleRadius = width / 2 - mMaxCircleStrokeWidth;
+        mMaxCircleRadius = (width / 2.0f) - mMaxCircleStrokeWidth;
 
         mMinCorner = ScreenUtils.dip2px(mContext, 5);
         mMaxCorner = mMaxRectWidth / 2;
@@ -271,16 +271,16 @@ public class MyRecordButton extends View {
 //                    mHandler.postDelayed(mClickRunnable, 200);
 //                }
                 break;
-            case MotionEvent.ACTION_MOVE:
-                if (!mHasCancel) {
-                    if (mRecordMode == RecordMode.LONG_CLICK) {
-                        float zoomPercentage = (mInfectionPoint - getY()) / mInitY;
-                        if (mOnRecordStateChangedListener != null) {
-                            mOnRecordStateChangedListener.onZoom(zoomPercentage);
-                        }
-                    }
-                }
-                break;
+//            case MotionEvent.ACTION_MOVE:
+//                if (!mHasCancel) {
+//                    if (mRecordMode == RecordMode.LONG_CLICK) {
+//                        float zoomPercentage = (mInfectionPoint - getY()) / mInitY;
+//                        if (mOnRecordStateChangedListener != null) {
+//                            mOnRecordStateChangedListener.onZoom(zoomPercentage);
+//                        }
+//                    }
+//                }
+//                break;
             case MotionEvent.ACTION_UP:
                 switch (mRecordMode) {
                     case ORIGIN://初始化
@@ -289,7 +289,6 @@ public class MyRecordButton extends View {
                             if (mOnRecordStateChangedListener != null) {
                                 mOnRecordStateChangedListener.onRecordStop();
                             }
-//                            startEndAnimation();
                             resetLongClick();
                         }else {
                             mHasCancel = false;
@@ -427,8 +426,7 @@ public class MyRecordButton extends View {
                 .setDuration(500);
         ObjectAnimator circleWidthAnimator = ObjectAnimator.ofFloat(this, "circleStrokeWidth",
                 mMaxCircleStrokeWidth, mMinCircleStrokeWidth)
-                .setDuration(500);
-
+                .setDuration(1500);
         mEndAnimatorSet.playTogether(cornerAnimator, rectSizeAnimator, radiusAnimator, circleWidthAnimator);
         mEndAnimatorSet.start();
     }
@@ -523,8 +521,8 @@ public class MyRecordButton extends View {
         @Override
         public void run() {
             if (!mHasCancel) {
-//                mRecordMode = RecordMode.LONG_CLICK;
-                mRecordMode = RecordMode.ORIGIN;
+                mRecordMode = RecordMode.LONG_CLICK;
+//                mRecordMode = RecordMode.ORIGIN;
                 mInitX = getX();
                 mInitY = getY();
                 mInfectionPoint = mInitY;

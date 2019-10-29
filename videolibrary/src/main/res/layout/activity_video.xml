@@ -8,7 +8,7 @@
     <SurfaceView
         android:id="@+id/sv_record"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <!--    <SurfaceView-->
     <!--        android:id="@+id/sv_record"-->
@@ -41,42 +41,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_marginBottom="60dp"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/sv_record">
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:layout_marginEnd="40dp"
             android:drawableTop="@drawable/ic_library_music_white"
             android:text="@string/str_select_music"
-            android:textSize="14sp"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
 
-        <com.wtg.videolibrary.widget.MyRecordButton
-            android:id="@+id/btn_record"
-            android:layout_width="100dp"
-            android:layout_height="100dp" />
+        <com.wtg.videolibrary.widget.CircleButtonView
+            android:id="@+id/circleButtonView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            app:maxTime="30"
+            app:minTime="3" />
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginEnd="40dp"
             android:drawableTop="@drawable/ic_camera_turn_over"
             android:text="@string/str_camera_turn_over"
-            android:textSize="14sp"
-            android:textColor="@color/color_white" />
+            android:textColor="@color/color_white"
+            android:textSize="14sp" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/switchCompat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/color_white"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">
 
     </LinearLayout>
