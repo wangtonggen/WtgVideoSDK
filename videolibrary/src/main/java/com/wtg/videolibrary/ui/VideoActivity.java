@@ -1,14 +1,10 @@
 package com.wtg.videolibrary.ui;
 
 import android.Manifest;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -17,6 +13,7 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.base.BaseActivity;
+import com.wtg.videolibrary.utils.Fileutils;
 import com.wtg.videolibrary.utils.ScreenUtils;
 import com.wtg.videolibrary.widget.AutoFitTextureView;
 import com.wtg.videolibrary.widget.CameraController;
@@ -46,13 +43,10 @@ public class VideoActivity extends BaseActivity{
         setContentView(R.layout.activity_video);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        setWindowStatusBarColor(R.color.color_black);
-
         sv_record = findViewById(R.id.sv_record);
         sv_record.setAspectRatio(ScreenUtils.getScreenWidth(this),ScreenUtils.getScreenHeight(this));
         circleButtonView = findViewById(R.id.circleButtonView);
-
         mCameraController = CameraController.getmInstance(this);
-
         mCameraController.setRecordFinishListener((type, path) -> {
             Log.e("tag",path+"---");
             switch (type){
@@ -61,7 +55,7 @@ public class VideoActivity extends BaseActivity{
                         @Override
                         public void run() {
                             Log.e("tag",path+"---111");
-                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File("/storage/emulated/0/AAA"),true);
+                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(Fileutils.IMAGE_ROOT),true);
                             Log.e("eee",filePath+"---");
                         }
                     }.start();
@@ -71,7 +65,7 @@ public class VideoActivity extends BaseActivity{
                         @Override
                         public void run() {
                             try {
-                                String filePath1 = SiliCompressor.with(VideoActivity.this).compressVideo(path, "/storage/emulated/0/AAA",0,0,6000000);
+                                String filePath1 = SiliCompressor.with(VideoActivity.this).compressVideo(path, Fileutils.IMAGE_ROOT,0,0,6000000);
                                 Log.e("eee",filePath1+"---filePath1");
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();
@@ -87,12 +81,9 @@ public class VideoActivity extends BaseActivity{
                 .subscribe(permission -> {
                     if (permission.granted){//已经同意
                         mCameraController.setFolderPath(BASE_PATH);
-
                         mCameraController.InitCamera(sv_record);
-
                         //预览界面出现时按钮才可以使用
                         circleButtonView.setOnClickListener(()->mCameraController.takePicture());
-
                         circleButtonView.setOnLongClickListener(new CircleButtonView.OnLongClickListener() {
                             @Override
                             public void onLongClick() {
