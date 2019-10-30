@@ -67,7 +67,6 @@ public class VideoActivity extends BaseActivity{
                     }.start();
                     break;
                 case VIDEO://摄像
-
                     new Thread(){
                         @Override
                         public void run() {
@@ -80,11 +79,6 @@ public class VideoActivity extends BaseActivity{
                             }
                         }
                     }.start();
-//                    new Handler().postDelayed(()->{
-//
-//
-//                    },2000);
-
                     break;
             }
         });
@@ -97,12 +91,7 @@ public class VideoActivity extends BaseActivity{
                         mCameraController.InitCamera(sv_record);
 
                         //预览界面出现时按钮才可以使用
-                        circleButtonView.setOnClickListener(new CircleButtonView.OnClickListener() {
-                            @Override
-                            public void onClick() {
-                                mCameraController.takePicture();
-                            }
-                        });
+                        circleButtonView.setOnClickListener(()->mCameraController.takePicture());
 
                         circleButtonView.setOnLongClickListener(new CircleButtonView.OnLongClickListener() {
                             @Override
