@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <SurfaceView
+    <com.wtg.videolibrary.widget.AutoFitTextureView
         android:id="@+id/sv_record"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -28,32 +28,65 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+<!--    <android.support.v7.widget.AppCompatTextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="40dp"-->
+<!--        android:layout_marginLeft="40dp"-->
+<!--        android:layout_marginEnd="40dp"-->
+<!--        android:drawableTop="@drawable/ic_camera_turn_over"-->
+<!--        android:text="@string/str_camera_turn_over"-->
+<!--        android:textColor="@color/color_white"-->
+<!--        android:textSize="12sp" />-->
+
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/iv_video_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_more_white_24dp"
+        android:src="@drawable/ic_camera_turn_over"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <android.support.v7.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:text="@string/str_button_hint"
+        android:textColor="@color/color_white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toTopOf="@id/ll_button" />
+
+    <LinearLayout
+        android:id="@+id/ll_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="@+id/sv_record">
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="40dp"
-            android:layout_marginEnd="40dp"
-            android:drawableTop="@drawable/ic_library_music_white"
-            android:text="@string/str_select_music"
-            android:textColor="@color/color_white"
-            android:textSize="14sp" />
+        <!--        <android.support.v7.widget.AppCompatTextView-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginRight="40dp"-->
+        <!--            android:layout_marginEnd="40dp"-->
+        <!--            android:drawableTop="@drawable/ic_library_music_white"-->
+        <!--            android:text="@string/str_select_music"-->
+        <!--            android:textColor="@color/color_white"-->
+        <!--            android:textSize="14sp" />-->
+
+<!--        <android.support.v7.widget.AppCompatTextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="40dp"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginEnd="40dp"-->
+<!--            android:drawableTop="@drawable/ic_image_black_24dp"-->
+<!--            android:text="@string/str_camera_turn_over"-->
+<!--            android:textColor="@color/color_white"-->
+<!--            android:textSize="12sp" />-->
 
         <com.wtg.videolibrary.widget.CircleButtonView
             android:id="@+id/circleButtonView"
@@ -62,15 +95,16 @@
             app:maxTime="30"
             app:minTime="3" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="40dp"
-            android:layout_marginEnd="40dp"
-            android:drawableTop="@drawable/ic_camera_turn_over"
-            android:text="@string/str_camera_turn_over"
-            android:textColor="@color/color_white"
-            android:textSize="14sp" />
+<!--        <android.support.v7.widget.AppCompatTextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="40dp"-->
+<!--            android:layout_marginLeft="40dp"-->
+<!--            android:layout_marginEnd="40dp"-->
+<!--            android:drawableTop="@drawable/ic_camera_turn_over"-->
+<!--            android:text="@string/str_camera_turn_over"-->
+<!--            android:textColor="@color/color_white"-->
+<!--            android:textSize="12sp" />-->
 
     </LinearLayout>
 
