@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--相册列表id-->
+    <item name="recycler_photo" type="id"/>
+    <!--图片的id-->
+    <item name="iv_photo" type="id"/>
+    <!--选中提示-->
+    <item name="tv_num" type="id"/>
+    <item name="view" type="id"/>
+</resources>

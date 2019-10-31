@@ -43,4 +43,9 @@ dependencies {
     //权限申请
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
+
+    //列表
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    //卡片
+    implementation 'com.android.support:cardview-v7:28.0.0'
 }
