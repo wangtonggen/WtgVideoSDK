@@ -19,7 +19,7 @@
     <!--        android:background="@drawable/shape_video"/>-->
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/iv_video_close"
+        android:id="@id/iv_video_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -40,7 +40,7 @@
 <!--        android:textSize="12sp" />-->
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/iv_video_more"
+        android:id="@id/iv_video_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"

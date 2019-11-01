@@ -4,7 +4,9 @@ import android.Manifest;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -28,14 +30,17 @@ import io.reactivex.disposables.Disposable;
  * author: wtg  2019/10/28 0028
  * desc: 拍照/拍视频界面
  */
-public class VideoActivity extends BaseActivity{
+public class VideoActivity extends BaseActivity implements View.OnClickListener {
     private AutoFitTextureView sv_record;
     private CircleButtonView circleButtonView;
+    private AppCompatImageView iv_video_switch;
+    private AppCompatImageView iv_video_close;
 
     private CameraController mCameraController;
 
     public static String BASE_PATH = Environment.getExternalStorageDirectory() + "/AAA";
 
+    private boolean isBack = true;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,9 @@ public class VideoActivity extends BaseActivity{
         sv_record = findViewById(R.id.sv_record);
         sv_record.setAspectRatio(ScreenUtils.getScreenWidth(this),ScreenUtils.getScreenHeight(this));
         circleButtonView = findViewById(R.id.circleButtonView);
+        iv_video_switch = findViewById(R.id.iv_video_switch);
+        iv_video_close = findViewById(R.id.iv_video_close);
+
         mCameraController = CameraController.getmInstance(this);
         mCameraController.setRecordFinishListener((type, path) -> {
             Log.e("tag",path+"---");
@@ -107,6 +115,22 @@ public class VideoActivity extends BaseActivity{
                         showPermissionDialog(VideoActivity.this,"相机和存储");
                     }
                 });
+
+        iv_video_switch.setOnClickListener(this);
+        iv_video_close.setOnClickListener(this);
     }
 
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.iv_video_switch){
+            Toast.makeText(this,"切换",Toast.LENGTH_SHORT).show();
+            isBack = !isBack;
+            mCameraController.switchCamera(isBack);
+        }else if (id == R.id.iv_video_close){
+            Toast.makeText(this,"finish",Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
 }

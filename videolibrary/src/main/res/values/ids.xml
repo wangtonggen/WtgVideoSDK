@@ -7,4 +7,7 @@
     <!--选中提示-->
     <item name="tv_num" type="id"/>
     <item name="view" type="id"/>
+
+    <item name="iv_video_switch" type="id"/>
+    <item name="iv_video_close" type="id"/>
 </resources>
