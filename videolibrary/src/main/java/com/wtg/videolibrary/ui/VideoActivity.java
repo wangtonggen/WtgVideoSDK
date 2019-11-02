@@ -63,7 +63,7 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                         @Override
                         public void run() {
                             Log.e("tag",path+"---111");
-                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(Fileutils.IMAGE_ROOT),true);
+                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(Fileutils.IMAGE_ROOT),false);
                             Log.e("eee",filePath+"---");
                         }
                     }.start();

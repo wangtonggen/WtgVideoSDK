@@ -27,6 +27,15 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    allprojects {
+        repositories {
+            google()
+            jcenter{url "http://jcenter.bintray.com/"}
+            maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+            maven { url "https://jitpack.io" }
+        }
+    }
 }
 
 dependencies {

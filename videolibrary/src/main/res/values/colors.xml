@@ -4,6 +4,10 @@
     <color name="color_black">#000000</color>
 
     <color name="color_3C3C3C">#3C3C3C</color>
+    <color name="color_4B4B4B">#4B4B4B</color>
     <color name="color_333232">#333232</color>
     <color name="color_06C05F">#06C05F</color>
+    <color name="color_1F1F1F">#1F1F1F</color>
+    <color name="color_0E0E0E">#0E0E0E</color>
+    <color name="color_B2B2B2">#B2B2B2</color>
 </resources>

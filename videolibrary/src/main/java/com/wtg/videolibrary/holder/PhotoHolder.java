@@ -1,6 +1,7 @@
 package com.wtg.videolibrary.holder;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,7 @@ import com.wtg.videolibrary.R;
  */
 public class PhotoHolder extends RecyclerView.ViewHolder{
     private AppCompatImageView iv_photo;
-    private AppCompatTextView tv_num;
+    private AppCompatCheckBox tv_num;
     private View view;
 
     public PhotoHolder(@NonNull View itemView) {

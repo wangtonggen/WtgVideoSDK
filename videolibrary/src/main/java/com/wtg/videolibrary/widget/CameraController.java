@@ -50,6 +50,8 @@ import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static android.hardware.camera2.CameraMetadata.CONTROL_AF_STATE_INACTIVE;
+
 /**
  * author: wtg  2019/10/30 0030
  * desc: 相机的管理类 camera2
@@ -83,7 +85,7 @@ public class CameraController {
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private RecordFinishListener recordFinishListener;
-    private boolean isBack = false;//是否是前置摄像头
+    private boolean isBack = true;//是否是前置摄像头
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -312,9 +314,7 @@ public class CameraController {
         //创建文件
         mFile = new File(getFolderPath() + "/" + getNowDate() + ".jpg");
         try {
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                    CameraMetadata.CONTROL_AF_TRIGGER_START);
-
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_START);
             mState = STATE_WAITING_LOCK;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
@@ -368,7 +368,7 @@ public class CameraController {
      * @param height 预览高度
      */
     private void openCamera(int width, int height) {
-        closeCamrea();
+        closeCamera();
         //设置相机输出
         setUpCameraOutputs(width, height);
         //配置变换
@@ -396,7 +396,14 @@ public class CameraController {
     /**
      * 关闭相机
      */
-    private void closeCamrea(){
+    public void closeCamera(){
+        try {
+            mCameraOpenCloseLock.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }finally {
+            mCameraOpenCloseLock.release();
+        }
         if (mCameraDevice != null){
             mCameraDevice.close();
             mCameraDevice = null;
@@ -407,11 +414,21 @@ public class CameraController {
             mCaptureSession = null;
         }
 
-//        if (resder != null) {
-//            cImageReader.close();
-//            cImageReader = null;
-//            captureRequestBuilder = null;
-//        }
+        if (null != mImageReader) {
+            mImageReader.close();
+            mImageReader = null;
+        }
+    }
+
+    public void stopBackgroundThread() {
+        mBackgroundThread.quitSafely();
+        try {
+            mBackgroundThread.join();
+            mBackgroundThread = null;
+            mBackgroundHandler = null;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -516,18 +533,30 @@ public class CameraController {
                 case STATE_WAITING_LOCK: {
                     //等待对焦
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
+                    Log.e("eee",afState+"---");
                     if (afState == null) {
                         captureStillPicture();
-                    } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState ||
+                    }else if (CONTROL_AF_STATE_INACTIVE == afState){//不支持自动对焦
+                        mState = STATE_PICTURE_TAKEN;
+                        captureStillPicture();
+                    }else if (CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN  == afState ||
+                            CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED  == afState ||
                             CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
                         // 某些设备上的控制状态可以为空
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
-                        if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+                        if (aeState == null || (CaptureResult.CONTROL_AF_STATE_PASSIVE_SCAN != afState
+                                && aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED)) {
                             mState = STATE_PICTURE_TAKEN;
                             captureStillPicture();
                         } else {
                             runPrecaptureSequence();
                         }
+//                        if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
+//                            mState = STATE_PICTURE_TAKEN;
+//                            captureStillPicture();
+//                        } else {
+//                            runPrecaptureSequence();
+//                        }
                     }
                     break;
                 }
@@ -696,6 +725,11 @@ public class CameraController {
                 mCameraId = manager.getCameraIdList()[1];
             }
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
+            int[] afAvailableModes  = characteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);
+            for (int afAvailableMode : afAvailableModes) {
+                Log.e("mode","afAvailableMode="+afAvailableMode);
+            }
+//            Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             if (map == null) {
                 return;
@@ -807,34 +841,6 @@ public class CameraController {
     }
 
     private static Size chooseOptimalSize(Size[] choices, int textureViewWidth, int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
-
-//        // 收集支持的分辨率，这些分辨率至少与预览图面一样大
-//        List<Size> bigEnough = new ArrayList<>();
-//        // 收集小于预览表面的支持分辨率
-//        List<Size> notBigEnough = new ArrayList<>();
-//        int w = aspectRatio.getWidth();
-//        int h = aspectRatio.getHeight();
-//        for (Size option : choices) {
-//            if (option.getWidth() <= maxWidth && option.getHeight() <= maxHeight &&
-//                    option.getHeight() == option.getWidth() * h / w) {
-//                if (option.getWidth() >= textureViewWidth &&
-//                        option.getHeight() >= textureViewHeight) {
-//                    bigEnough.add(option);
-//                } else {
-//                    notBigEnough.add(option);
-//                }
-//            }
-//        }
-//
-//        //挑一个足够大的最小的。如果没有一个足够大的，就挑一个不够大的。
-//        if (bigEnough.size() > 0) {
-//            return Collections.min(bigEnough, new CompareSizesByArea());
-//        } else if (notBigEnough.size() > 0) {
-//            return Collections.max(notBigEnough, new CompareSizesByArea());
-//        } else {
-//            Log.d(TAG, "Couldn't find any suitable preview size");
-//            return choices[0];
-//        }
 
         final double ASPECT_TOLERANCE = 0.1;
         double targetRatio = (double) textureViewWidth / textureViewHeight;
