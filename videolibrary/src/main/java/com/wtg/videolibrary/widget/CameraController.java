@@ -696,12 +696,10 @@ public class CameraController {
                 mCameraId = manager.getCameraIdList()[1];
             }
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
-//            Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             if (map == null) {
                 return;
             }
-//                for (Map.Entry<>)
             //对于静态图像拍照, 使用最大的可用尺寸
             Size largest = Collections.max(
                     Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
@@ -788,106 +786,6 @@ public class CameraController {
 
             mMediaRecorder = new MediaRecorder();
 
-          /*  for (String cameraId : manager.getCameraIdList()) {
-                CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
-                //不使用前置摄像
-                Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-                if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
-                    continue;//不结束循环,只跳出本次循环
-                }
-                StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                if (map == null) {
-                    continue;
-                }
-                //对于静态图像拍照, 使用最大的可用尺寸
-                Size largest = Collections.max(
-                        Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
-                        new CompareSizesByArea()
-                );
-                mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(), ImageFormat.JPEG, 2);
-                mImageReader.setOnImageAvailableListener(mOnImageAvailableListener, mBackgroundHandler);
-                //获取手机旋转的角度以调整图片的方向
-                int displayRotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-                mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-                boolean swappedDimensions = false;
-
-                switch (displayRotation) {
-                    case Surface.ROTATION_0:
-                    case Surface.ROTATION_180:
-                        if (mSensorOrientation != null){
-                            //横屏
-                            if (mSensorOrientation == 90 || mSensorOrientation == 270) {
-                                swappedDimensions = true;
-                            }
-                        }
-                        break;
-                    case Surface.ROTATION_90:
-                    case Surface.ROTATION_270:
-                        if (mSensorOrientation != null){
-                            //竖屏
-                            if (mSensorOrientation == 0 || mSensorOrientation == 180) {
-                                swappedDimensions = true;
-                            }
-                        }
-                        break;
-                    default:
-                        Log.e(TAG, "Display rotation is invalid: " + displayRotation);
-                }
-
-                Point displaySize = new Point();
-                mActivity.getWindowManager().getDefaultDisplay().getSize(displaySize);
-                int rotatedPreviewWidth = width;
-                int rotatedPreviewHeight = height;
-                int maxPreviewWidth = displaySize.x;
-                int maxPreviewHeight = displaySize.y;
-
-//                Log.e("size",rotatedPreviewWidth+"---"+rotatedPreviewHeight+"---"+maxPreviewWidth+"---"+maxPreviewHeight);
-                if (swappedDimensions) {
-                    rotatedPreviewWidth = height;
-                    rotatedPreviewHeight = width;
-                    maxPreviewWidth = displaySize.y;
-                    maxPreviewHeight = displaySize.x;
-                }
-
-                if (maxPreviewWidth > MAX_PREVIEW_WIDTH) {
-                    maxPreviewWidth = MAX_PREVIEW_WIDTH;
-                }
-
-                if (maxPreviewHeight > MAX_PREVIEW_HEIGHT) {
-                    maxPreviewHeight = MAX_PREVIEW_HEIGHT;
-                }
-
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                mActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int widthPixels = displayMetrics.widthPixels;
-                int heightPixels = displayMetrics.heightPixels;
-                Log.d(TAG, "widthPixels: " + widthPixels + "____heightPixels:" + heightPixels);
-
-                //设置最佳合适的屏幕比显示预览框
-                mPreviewSize = chooseOptimalSize(map.getOutputSizes(SurfaceTexture.class),
-                        rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
-                        maxPreviewHeight, largest);
-
-                //我们将TextureView的宽高比与我们选择的预览大小相匹配。这样设置不会拉伸,但是不能全屏展示
-                int orientation = mActivity.getResources().getConfiguration().orientation;
-                if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    //横屏
-                    mTextureView.setAspectRatio(
-                            mPreviewSize.getWidth(), mPreviewSize.getHeight());
-                    Log.d(TAG, "横屏: " + "width:" + mPreviewSize.getWidth() + "____height:" + mPreviewSize.getHeight());
-
-                } else {
-                    // 竖屏
-                    mTextureView.setAspectRatio(widthPixels, heightPixels);
-
-                    Log.d(TAG, "竖屏: " + "____height:" + mPreviewSize.getHeight() + "width:" + mPreviewSize.getWidth());
-                }
-
-                mMediaRecorder = new MediaRecorder();
-
-                mCameraId = cameraId;
-                return;
-            }*/
         } catch (CameraAccessException e) {
             Log.e("CameraAccessException", e.getMessage());
 
@@ -903,14 +801,12 @@ public class CameraController {
         @Override
         public int compare(Size lhs, Size rhs) {
             // 我们在这里投放，以确保乘法不会溢出
-            return Long.signum((long) lhs.getWidth() * lhs.getHeight() -
-                    (long) rhs.getWidth() * rhs.getHeight());
+            return Long.signum((long) lhs.getWidth() * lhs.getHeight() - (long) rhs.getWidth() * rhs.getHeight());
         }
 
     }
 
-    private static Size chooseOptimalSize(Size[] choices, int textureViewWidth,
-                                          int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
+    private static Size chooseOptimalSize(Size[] choices, int textureViewWidth, int textureViewHeight, int maxWidth, int maxHeight, Size aspectRatio) {
 
 //        // 收集支持的分辨率，这些分辨率至少与预览图面一样大
 //        List<Size> bigEnough = new ArrayList<>();
