@@ -11,4 +11,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center</item>
     </style>
+
+    <!--选择照片类型的pop动画-->
+    <style name="pop_photo_type_style">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_photo_type_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_photo_type_hide</item>
+    </style>
 </resources>
