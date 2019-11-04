@@ -6,11 +6,13 @@ package com.wtg.videolibrary.bean;
  */
 public class PhotoTypeBean {
     //图片文件夹类型
-    private  String photoType;
+    private String photoType;
     //文件夹显示的类型
     private String imagePath;
     //文件夹里面的文件书泪
     private int photoNum;
+    //是否选中
+    private boolean isSelect = false;
 
     public String getPhotoType() {
         return photoType;
@@ -34,5 +36,13 @@ public class PhotoTypeBean {
 
     public void setPhotoNum(int photoNum) {
         this.photoNum = photoNum;
+    }
+
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
     }
 }

@@ -5,4 +5,6 @@
     <string name="str_camera_turn_over">翻转</string>
     <string name="str_image">照片</string>
     <string name="str_button_hint">轻触拍照，长按摄像</string>
+    <string name="str_button_finish">完成</string>
+    <string name="str_preview">预览</string>
 </resources>

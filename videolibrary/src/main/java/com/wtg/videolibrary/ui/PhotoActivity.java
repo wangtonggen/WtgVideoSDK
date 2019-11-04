@@ -8,10 +8,12 @@ import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.adapter.PhotoAdapter;
@@ -19,6 +21,7 @@ import com.wtg.videolibrary.adapter.PhotoTypeAdapter;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.PhotoBean;
 import com.wtg.videolibrary.bean.PhotoTypeBean;
+import com.wtg.videolibrary.utils.PhotoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +38,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private AppCompatTextView tv_photo_type;
     private AppCompatImageView iv_arrow;
     private AppCompatButton btn_finish;
+    private AppCompatTextView tv_preview;
     private View view_shade;
 
     //显示照片
@@ -47,19 +51,22 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private PhotoTypeAdapter photoTypeAdapter;
     private List<PhotoTypeBean> photoTypeBeans = new ArrayList<>();
     //是否是0度
-    private boolean isDegress0 = true;
+    private boolean isDegree0 = true;
     private Animation animationDegree0;
     private Animation animationDegree180;
 
     //pop动画
     private boolean isPopShow = false;
     private Animation animationShowPop;
-    private Animation animationDimissPop;
+    private Animation animationDismissPop;
 
     //遮罩动画
     private Animation animationShadeShow;
     private Animation animationShadeGone;
 
+    private int photoTypePosition = -1;
+
+    private List<String> stringList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -97,22 +104,62 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         tv_photo_type = findViewById(R.id.tv_photo_type);
         iv_arrow = findViewById(R.id.iv_arrow);
         btn_finish = findViewById(R.id.btn_finish);
+        tv_preview = findViewById(R.id.tv_preview);
         recycler_photo = findViewById(R.id.recycler_photo);
 
         view_shade = findViewById(R.id.view_shade);
         recycler_photo_type = findViewById(R.id.recycler_photo_type);
-
     }
 
     /**
      * 设置监听
      */
-    private void setOnClickListener(){
+    private void setOnClickListener() {
         iv_photo_close.setOnClickListener(this);
         ll_select_type.setOnClickListener(this);
         btn_finish.setOnClickListener(this);
 
-        photoAdapter.
+        photoTypeAdapter.setOnItemClickListener((position, view) -> {
+            if (photoTypePosition == -1) {
+                photoTypeBeans.get(position).setSelect(true);
+                photoTypeAdapter.notifyItemChanged(position, 0);
+            } else {
+                if (photoTypePosition != position) {
+                    photoTypeBeans.get(photoTypePosition).setSelect(false);
+                    photoTypeBeans.get(position).setSelect(true);
+                    photoTypeAdapter.notifyItemChanged(photoTypePosition, 0);
+                    photoTypeAdapter.notifyItemChanged(position, 0);
+                }
+            }
+            photoTypePosition = position;
+        });
+
+        photoAdapter.setOnItemClickListener((position, view) -> {
+            int id = view.getId();
+            if (id == R.id.tv_num) {//选中取消选中
+                if (photoBeans.get(position).isSelect()) {
+                    stringList.remove(photoBeans.get(position).getFilePath());
+                } else {
+                    if (stringList.size() >= PhotoUtils.getInstance().getMaxNum()) {
+                        Toast.makeText(PhotoActivity.this, "最多可选择9张", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (!stringList.contains(photoBeans.get(position).getFilePath())) {
+                        stringList.add(photoBeans.get(position).getFilePath());
+                    }
+                }
+                photoBeans.get(position).setSelect(!photoBeans.get(position).isSelect());
+                photoAdapter.setFilePaths(stringList);
+                photoAdapter.notifyDataSetChanged();
+                updateFinishButton();
+            } else if (id == R.id.view) {//大图跳转预览页面
+                Log.e("222", "遮罩");
+            } else if (id == R.id.iv_photo) {//跳转预览页页面
+                Log.e("333", "photo");
+            } else {
+                Log.e("item", "item");
+            }
+        });
     }
 
     /**
@@ -121,7 +168,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     private void initAnim() {
         //从0°旋转180°
         animationDegree0 = AnimationUtils.loadAnimation(this, R.anim.anim_arrow_degree0);
-
         animationDegree0.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -130,7 +176,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                isDegress0 = !isDegress0;
+                isDegree0 = !isDegree0;
                 ll_select_type.setEnabled(true);
             }
 
@@ -151,7 +197,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                isDegress0 = !isDegress0;
+                isDegree0 = !isDegree0;
                 ll_select_type.setEnabled(true);
             }
 
@@ -180,8 +226,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             }
         });
 
-        animationDimissPop = AnimationUtils.loadAnimation(this, R.anim.anim_pop_photo_type_hide);
-        animationDimissPop.setAnimationListener(new Animation.AnimationListener() {
+        animationDismissPop = AnimationUtils.loadAnimation(this, R.anim.anim_pop_photo_type_hide);
+        animationDismissPop.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
 
@@ -246,7 +292,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
         ll_select_type.setEnabled(false);
-        iv_arrow.startAnimation(isDegress0 ? animationDegree0 : animationDegree180);
+        iv_arrow.startAnimation(isDegree0 ? animationDegree0 : animationDegree180);
     }
 
     /**
@@ -269,22 +315,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
      * 初始化照片
      */
     private void initPhoto() {
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
-        photoBeans.add(new PhotoBean());
+        for (int i = 0; i < 20; i++) {
+            photoBeans.add(new PhotoBean(i + ""));
+        }
         photoAdapter = new PhotoAdapter(this, photoBeans);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycler_photo.setLayoutManager(gridLayoutManager);
@@ -301,7 +334,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             recycler_photo_type.setVisibility(View.VISIBLE);
             recycler_photo_type.startAnimation(animationShowPop);
         } else {
-            recycler_photo_type.startAnimation(animationDimissPop);
+            recycler_photo_type.startAnimation(animationDismissPop);
         }
 
     }
@@ -316,6 +349,14 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         } else {
             view_shade.startAnimation(animationShadeGone);
         }
+    }
+
+    private void updateFinishButton() {
+        btn_finish.setEnabled(stringList.size() >= PhotoUtils.getInstance().getMinNum());
+        btn_finish.setText(stringList.size() == 0 ? getResources().getString(R.string.str_button_finish) : String.format("完成(%s/%s)", stringList.size(), PhotoUtils.getInstance().getMaxNum()));
+
+        tv_preview.setTextColor(stringList.size() >= PhotoUtils.getInstance().getMinNum() ? getResources().getColor(R.color.color_white) : getResources().getColor(R.color.color_888888));
+        tv_preview.setText(stringList.size() == 0 ? getResources().getString(R.string.str_preview) : String.format("预览(%s/%s)", stringList.size(), PhotoUtils.getInstance().getMaxNum()));
     }
 
     @Override

@@ -58,9 +58,10 @@
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_finish"
         style="@style/btn_photo_style"
+        android:enabled="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="完成(1/9)"/>
+        android:text="@string/str_button_finish"/>
 
 </android.support.constraint.ConstraintLayout>

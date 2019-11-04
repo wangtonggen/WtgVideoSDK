@@ -31,12 +31,20 @@ public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     @Override
     public PhotoTypeHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_type,viewGroup,false);
-        return new PhotoTypeHolder(view);
+        PhotoTypeHolder photoTypeHolder = new PhotoTypeHolder(view);
+        photoTypeHolder.setOnItemClickListener(onItemClickListener);
+        return photoTypeHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PhotoTypeHolder photoTypeHolder, int i) {
-
+        photoTypeHolder.itemView.setTag(i);
+        PhotoTypeBean photoTypeBean = list.get(i);
+        photoTypeHolder.getIv_photo_select().setVisibility(photoTypeBean.isSelect()?View.VISIBLE:View.INVISIBLE);
+//        photoTypeHolder.getTv_photo_type().setText(photoTypeBean.getPhotoType());
+//        photoTypeHolder.getTv_photo_num().setText(String.format("%s",photoTypeBean.getPhotoNum()));
+//        photoTypeHolder.tvClick.setTag(position);
+//        vh.tvLongClick.setTag(position);
     }
 
     @Override
