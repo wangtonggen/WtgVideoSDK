@@ -17,7 +17,7 @@ import java.util.List;
  * author: admin 2019/10/31
  * desc: 相册的adapter
  */
-public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
+public class PhotoAdapter extends BaseAdapter<PhotoHolder> {
     private List<PhotoBean> list;
     private Context context;
     public PhotoAdapter(Context context,List<PhotoBean> list) {
@@ -41,4 +41,6 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoHolder> {
     public int getItemCount() {
         return list.size();
     }
+
+
 }

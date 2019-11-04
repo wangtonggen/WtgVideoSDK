@@ -1,6 +1,7 @@
 package com.wtg.videolibrary.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -48,5 +49,16 @@ public class ScreenUtils {
         int width = display.getWidth();
         int height = display.getHeight();
         return width;
+    }
+
+    /**
+     * 获取状态栏高度
+     * @param context 上下文
+     * @return 状态栏高度
+     */
+    public static int getStatusBarHeight(Context context) {
+        Resources resources = context.getResources();
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        return resources.getDimensionPixelSize(resourceId);
     }
 }

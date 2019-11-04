@@ -19,7 +19,7 @@ import java.util.List;
  * author: admin 2019/11/3
  * desc: 选择照片类型的adapter
  */
-public class PhotoTypeAdapter extends RecyclerView.Adapter<PhotoTypeHolder> {
+public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     private Context context;
     private List<PhotoTypeBean> list;
     public PhotoTypeAdapter(Context context, List<PhotoTypeBean> list) {
