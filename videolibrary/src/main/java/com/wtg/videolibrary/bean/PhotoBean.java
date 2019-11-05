@@ -1,5 +1,7 @@
 package com.wtg.videolibrary.bean;
 
+import com.wtg.videolibrary.annotation.ImageTypeAnont;
+
 import java.io.Serializable;
 
 /**
@@ -23,7 +25,8 @@ public class PhotoBean implements Serializable {
     /**
      * 文件的类型
      */
-    private ImageType imageType;
+    @ImageTypeAnont.ImageType
+    private int imageType = ImageTypeAnont.HOLDER_TYPE_IMAGE;
 
     /**
      * 文件的本地路径
@@ -32,6 +35,10 @@ public class PhotoBean implements Serializable {
 
     //是否选中
     private boolean isSelect;
+
+    public PhotoBean(){
+
+    }
 
     public PhotoBean(String filePath) {
         this.filePath = filePath;
@@ -61,14 +68,6 @@ public class PhotoBean implements Serializable {
         this.strType = strType;
     }
 
-    public ImageType getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(ImageType imageType) {
-        this.imageType = imageType;
-    }
-
     public String getFilePath() {
         return filePath;
     }
@@ -85,10 +84,12 @@ public class PhotoBean implements Serializable {
         isSelect = select;
     }
 
-    public enum ImageType{
-        TYPE_CAMERA,//照相机
-        TYPE_IMAGE,//图片类型
-        TYPE_VIDEO,//视频类型
-        TYPE_ALL//全部(不包含照相机)
+    @ImageTypeAnont.ImageType
+    public int getImageType() {
+        return imageType;
+    }
+
+    public void setImageType(@ImageTypeAnont.ImageType int imageType) {
+        this.imageType = imageType;
     }
 }

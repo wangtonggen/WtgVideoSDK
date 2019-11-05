@@ -3,13 +3,15 @@ package com.wtg.videolibrary.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.wtg.videolibrary.R;
+import com.wtg.videolibrary.annotation.ImageTypeAnont;
 import com.wtg.videolibrary.bean.PhotoBean;
+import com.wtg.videolibrary.holder.BaseHolder;
+import com.wtg.videolibrary.holder.CameraHolder;
 import com.wtg.videolibrary.holder.PhotoHolder;
 
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.List;
  * author: admin 2019/10/31
  * desc: 相册的adapter
  */
-public class PhotoAdapter extends BaseAdapter<PhotoHolder> {
+public class PhotoAdapter extends BaseAdapter<BaseHolder> {
     private Context context;
     private List<PhotoBean> list;
     private List<String> filePaths;
@@ -30,32 +32,61 @@ public class PhotoAdapter extends BaseAdapter<PhotoHolder> {
 
     @NonNull
     @Override
-    public PhotoHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo, viewGroup, false);
-        PhotoHolder photoHolder = new PhotoHolder(view);
-        photoHolder.setOnItemClickListener(onItemClickListener);
-        return photoHolder;
+    public BaseHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        BaseHolder baseHolder = null;
+        switch (i) {
+            case ImageTypeAnont.HOLDER_TYPE_CAMERA:
+                View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_camera, viewGroup, false);
+                baseHolder = new CameraHolder(view);
+                break;
+            default:
+                View view1 = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo, viewGroup, false);
+                baseHolder = new PhotoHolder(view1);
+                break;
+        }
+        baseHolder.setOnItemClickListener(onItemClickListener);
+        return baseHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PhotoHolder photoHolder, int i) {
-        photoHolder.itemView.setTag(i);
-        photoHolder.tv_num.setTag(i);
-        photoHolder.iv_photo.setTag(i);
-        photoHolder.view.setTag(i);
+    public void onBindViewHolder(@NonNull BaseHolder baseHolder, int i) {
         PhotoBean photoBean = list.get(i);
-        photoHolder.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
-        if (photoBean.isSelect()) {
-            if (filePaths != null){
-                if (filePaths.contains(photoBean.getFilePath())){
-                    photoHolder.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean.getFilePath())+1));
+        switch (photoBean.getImageType()) {
+            case ImageTypeAnont.HOLDER_TYPE_IMAGE:
+                PhotoHolder photoHolder = (PhotoHolder) baseHolder;
+                photoHolder.itemView.setTag(i);
+                photoHolder.tv_num.setTag(i);
+                if (photoHolder.iv_photo != null) {
+                    photoHolder.iv_photo.setTag(i);
                 }
-            }
-            photoHolder.view.setVisibility(View.VISIBLE);
-        } else {
-            photoHolder.tv_num.setText("");
-            photoHolder.view.setVisibility(View.GONE);
+                if (photoHolder.view != null) {
+                    photoHolder.view.setTag(i);
+                }
+                Log.e("tag",photoHolder.tv_num.getTag()+"---");
+                photoHolder.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
+                if (photoBean.isSelect()) {
+                    if (filePaths != null) {
+                        if (filePaths.contains(photoBean.getFilePath())) {
+                            photoHolder.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean.getFilePath()) + 1));
+                        }
+                    }
+                    photoHolder.view.setVisibility(View.VISIBLE);
+                } else {
+                    photoHolder.tv_num.setText("");
+                    photoHolder.view.setVisibility(View.INVISIBLE);
+                }
+                break;
+            case ImageTypeAnont.HOLDER_TYPE_CAMERA:
+                CameraHolder cameraHolder = (CameraHolder) baseHolder;
+                cameraHolder.itemView.setTag(i);
+                cameraHolder.tv_num.setTag(i);
+                break;
         }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return list.get(position).getImageType();
     }
 
     @Override

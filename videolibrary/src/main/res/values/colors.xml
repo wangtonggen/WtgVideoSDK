@@ -5,6 +5,7 @@
     <color name="color_black">#000000</color>
     <color name="color_99black">#99000000</color>
     <color name="color_80ffffff">#80ffffff</color>
+    <color name="color_4d000000">#4d000000</color>
 
     <color name="color_3C3C3C">#3C3C3C</color>
     <color name="color_4B4B4B">#4B4B4B</color>
@@ -15,4 +16,6 @@
     <color name="color_0E0E0E">#0E0E0E</color>
     <color name="color_B2B2B2">#B2B2B2</color>
     <color name="color_888888">#888888</color>
+    <color name="color_A9A9A9">#A9A9A9</color>
+    <color name="color_686868">#686868</color>
 </resources>

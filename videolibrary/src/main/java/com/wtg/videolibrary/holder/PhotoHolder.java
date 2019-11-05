@@ -1,10 +1,8 @@
 package com.wtg.videolibrary.holder;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.AppCompatCheckBox;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.wtg.videolibrary.R;

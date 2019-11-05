@@ -27,17 +27,23 @@ public abstract class BaseHolder extends RecyclerView.ViewHolder implements View
     @Override
     public void onClick(View v) {
         if (onItemClickListener != null){
-            int position = (int)v.getTag();
-            onMyClick(position,v);
+            if (v != null){
+                int position = (int)v.getTag();
+                onMyClick(position,v);
+            }
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
         if (onLongClickListener != null){
-            int position = (int)v.getTag();
-            onMyLongClick(position,v);
-            return true;
+            if (v != null){
+                int position = (int)v.getTag();
+                onMyLongClick(position,v);
+                return true;
+            }else {
+                return true;
+            }
         }else {
             return false;
         }
@@ -70,4 +76,5 @@ public abstract class BaseHolder extends RecyclerView.ViewHolder implements View
     abstract void onMyClick(int position,View view);
 
     abstract void onMyLongClick(int position,View view);
+
 }

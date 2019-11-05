@@ -7,4 +7,5 @@
     <string name="str_button_hint">轻触拍照，长按摄像</string>
     <string name="str_button_finish">完成</string>
     <string name="str_preview">预览</string>
+    <string name="str_take_photo">拍摄照片</string>
 </resources>
