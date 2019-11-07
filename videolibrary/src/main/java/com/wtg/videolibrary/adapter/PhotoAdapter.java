@@ -9,7 +9,8 @@ import android.view.ViewGroup;
 
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
-import com.wtg.videolibrary.bean.PhotoBean;
+import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.holder.BaseHolder;
 import com.wtg.videolibrary.holder.CameraHolder;
 import com.wtg.videolibrary.holder.PhotoHolder;
@@ -22,10 +23,10 @@ import java.util.List;
  */
 public class PhotoAdapter extends BaseAdapter<BaseHolder> {
     private Context context;
-    private List<PhotoBean> list;
+    private List<BaseMediaBean> list;
     private List<String> filePaths;
 
-    public PhotoAdapter(Context context, List<PhotoBean> list) {
+    public PhotoAdapter(Context context, List<BaseMediaBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -33,16 +34,13 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
     @NonNull
     @Override
     public BaseHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        BaseHolder baseHolder = null;
-        switch (i) {
-            case ImageTypeAnont.HOLDER_TYPE_CAMERA:
-                View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_camera, viewGroup, false);
-                baseHolder = new CameraHolder(view);
-                break;
-            default:
-                View view1 = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo, viewGroup, false);
-                baseHolder = new PhotoHolder(view1);
-                break;
+        BaseHolder baseHolder;
+        if (i == ImageTypeAnont.HOLDER_TYPE_CAMERA){
+            View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_camera, viewGroup, false);
+            baseHolder = new CameraHolder(view);
+        }else {
+            View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo, viewGroup, false);
+            baseHolder = new PhotoHolder(view);
         }
         baseHolder.setOnItemClickListener(onItemClickListener);
         return baseHolder;
@@ -50,7 +48,7 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseHolder baseHolder, int i) {
-        PhotoBean photoBean = list.get(i);
+        BaseMediaBean photoBean = list.get(i);
         switch (photoBean.getImageType()) {
             case ImageTypeAnont.HOLDER_TYPE_IMAGE:
                 PhotoHolder photoHolder = (PhotoHolder) baseHolder;
@@ -66,8 +64,8 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 photoHolder.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
                 if (photoBean.isSelect()) {
                     if (filePaths != null) {
-                        if (filePaths.contains(photoBean.getFilePath())) {
-                            photoHolder.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean.getFilePath()) + 1));
+                        if (filePaths.contains(photoBean.getPath())) {
+                            photoHolder.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean.getPath()) + 1));
                         }
                     }
                     photoHolder.view.setVisibility(View.VISIBLE);

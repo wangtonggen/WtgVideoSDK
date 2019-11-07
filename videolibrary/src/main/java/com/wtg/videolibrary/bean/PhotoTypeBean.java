@@ -9,7 +9,7 @@ public class PhotoTypeBean {
     private String photoType;
     //文件夹显示的类型
     private String imagePath;
-    //文件夹里面的文件书泪
+    //文件夹里面的文件数量
     private int photoNum;
     //是否选中
     private boolean isSelect = false;

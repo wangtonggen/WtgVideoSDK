@@ -1,64 +1,82 @@
 package com.wtg.videolibrary.utils.image;
 
-import android.content.ContentProvider;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 
-import com.wtg.videolibrary.bean.PhotoBean;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * author: admin 2019/11/5
  * desc: 获取本地图片和视频的基类
  */
-public abstract class BaseImageMedia {
+public abstract class BaseImageMedia<T> {
     private Context mContext;
     //获取map key是文件夹 value数据列表
-    protected Map<String, List<PhotoBean>> mMap = new HashMap<>();
-    protected ContentResolver mContentResolver;
-    protected Cursor mCursor;
-    protected String[] mProjection;
-    protected Uri mUri;
-    public BaseImageMedia(Context context){
-        this.mContext = context;
-        this.mContentResolver = context.getContentResolver();
-        mProjection = getProjection();
-        mUri = getUri();
-    }
 
-    public Map<String, List<PhotoBean>> getmMap() {
-        return mMap;
+    BaseImageMedia(Context mContext) {
+        this.mContext = mContext;
     }
 
     /**
-     * 获取URI
+     * 查询数据
+     * @return 数据
+     */
+    public ArrayList<T> querySouurce(){
+        ArrayList<T> list = new ArrayList<>();
+        ContentResolver contentResolver = mContext.getContentResolver();
+        Cursor cursor = contentResolver.query(getScanUri(), getProjection(), getSelection(), getSelectionArgs(), getSort());
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                T t = parse(cursor);
+                list.add(t);
+            }
+            cursor.close();
+        }
+        return list;
+    }
+
+    /**
+     * 查询URI
+     *
      * @return uri
      */
-    public abstract Uri getUri();
+    protected abstract Uri getScanUri();
 
     /**
-     * 获取查询条件
-     * @return 条件集合
+     * 查询列名
+     *
+     * @return 列名
      */
-    public abstract String[] getProjection();
+    protected abstract String[] getProjection();
 
     /**
-     * 查询
+     * 查询条件
+     *
+     * @return 条件
      */
-    public abstract void query();
+    protected abstract String getSelection();
 
     /**
-     * 关闭数据库游标
+     * 查询条件值
+     *
+     * @return 筛选条件
      */
-    public void closeCursor(){
-        if (mCursor != null){
-            mCursor.close();
-        }
-    }
+    protected abstract String[] getSelectionArgs();
+
+    /**
+     * 查询排序
+     *
+     * @return 排序
+     */
+    protected abstract String getSort();
+
+    /**
+     * 对外暴露游标，让开发者灵活构建对象
+     *
+     * @param cursor 游标
+     * @return cursor
+     */
+    protected abstract T parse(Cursor cursor);
 }

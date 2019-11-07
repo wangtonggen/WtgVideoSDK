@@ -20,7 +20,8 @@ import com.wtg.videolibrary.adapter.PhotoAdapter;
 import com.wtg.videolibrary.adapter.PhotoTypeAdapter;
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
-import com.wtg.videolibrary.bean.PhotoBean;
+import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.bean.PhotoTypeBean;
 import com.wtg.videolibrary.utils.PhotoUtils;
 import com.wtg.videolibrary.widget.DividerItemDecoration;
@@ -46,7 +47,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     //显示照片
     private RecyclerView recycler_photo;
     private PhotoAdapter photoAdapter;
-    private List<PhotoBean> photoBeans = new ArrayList<>();
+    private List<BaseMediaBean> photoBeans = new ArrayList<>();
 
     //显示照片类型
     private RecyclerView recycler_photo_type;
@@ -94,7 +95,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             startArrowAnim();
             showOrDismissPop();
         } else if (id == R.id.btn_finish) {
-
+            finish();
         }
     }
 
@@ -139,17 +140,17 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
         photoAdapter.setOnItemClickListener((position, view) -> {
             int id = view.getId();
-            PhotoBean photoBean = photoBeans.get(position);
+            BaseMediaBean photoBean = photoBeans.get(position);
             if (id == R.id.tv_num) {//选中取消选中
                 if (photoBean.isSelect()) {
-                    stringList.remove(photoBean.getFilePath());
+                    stringList.remove(photoBean.getPath());
                 } else {
                     if (stringList.size() >= PhotoUtils.getInstance().getMaxNum()) {
                         Toast.makeText(PhotoActivity.this, "最多可选择9张", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (!stringList.contains(photoBean.getFilePath())) {
-                        stringList.add(photoBean.getFilePath());
+                    if (!stringList.contains(photoBean.getPath())) {
+                        stringList.add(photoBean.getPath());
                     }
                 }
                 photoBean.setSelect(!photoBean.isSelect());
@@ -321,8 +322,8 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private void initParams(){
         if (PhotoUtils.getInstance().isShowCamera()){
-            PhotoBean photoBean = new PhotoBean();
-            photoBean.setFilePath("camera");
+            BaseMediaBean photoBean = new BaseMediaBean();
+            photoBean.setPath("camera");
             photoBean.setImageType(ImageTypeAnont.HOLDER_TYPE_CAMERA);
             photoBeans.add(photoBean);
         }
@@ -332,9 +333,9 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
      * 初始化照片
      */
     private void initPhoto() {
-        for (int i = 1; i < 20; i++) {
-            photoBeans.add(new PhotoBean(i + ""));
-        }
+//        for (int i = 1; i < 20; i++) {
+//            photoBeans.add(new BaseMediaBean(i + ""));
+//        }
         photoAdapter = new PhotoAdapter(this, photoBeans);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycler_photo.addItemDecoration(new DividerItemDecoration(this));

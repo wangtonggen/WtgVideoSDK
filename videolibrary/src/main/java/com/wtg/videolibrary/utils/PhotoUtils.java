@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
-import com.wtg.videolibrary.bean.PhotoBean;
 import com.wtg.videolibrary.ui.PhotoActivity;
 
 /**

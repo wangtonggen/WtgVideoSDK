@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">VideoLibrary</string>
 
+    <string name="all_media">图片和视频</string>
+    <string name="all_video">所有视频</string>
+
     <string name="str_select_music">选择音乐</string>
     <string name="str_camera_turn_over">翻转</string>
     <string name="str_image">照片</string>
