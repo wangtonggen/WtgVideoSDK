@@ -100,22 +100,28 @@ public class MediaHandler {
             for (int i = 0; i < size; i++) {
                 BaseMediaBean mediaFile = imageFileList.get(i);
                 int imageFolderId = mediaFile.getFolderId();
-                FolderBean mediaFolder = mediaFolderMap.get(imageFolderId);
+                FolderBean mediaFolder = sparseArray.get(imageFolderId);
                 if (mediaFolder == null) {
                     mediaFolder = new FolderBean(imageFolderId, mediaFile.getFolderName(), mediaFile.getPath(), new ArrayList<>());
                 }
                 ArrayList<BaseMediaBean> imageList = mediaFolder.getMediaFileList();
                 imageList.add(mediaFile);
                 mediaFolder.setMediaFileList(imageList);
-                mediaFolderMap.put(imageFolderId, mediaFolder);
+                sparseArray.put(imageFolderId, mediaFolder);
             }
         }
 
         //整理聚类数据
         ArrayList<FolderBean> mediaFolderList = new ArrayList<>();
-        for (Integer folderId : mediaFolderMap.keySet()) {
-            mediaFolderList.add(mediaFolderMap.get(folderId));
+        for (int i= 0; i < sparseArray.size();i++){
+            int key = sparseArray.keyAt(i);
+            mediaFolderList.add(sparseArray.get(key));
+//            UserBean user = mUserArray.get(key);
+//            Log.e("key = " + key, user.toString());
         }
+//        for (Integer folderId : mediaFolderMap.keySet()) {
+//            mediaFolderList.add(mediaFolderMap.get(folderId));
+//        }
 
         //按照图片文件夹的数量排序
         Collections.sort(mediaFolderList, (o1, o2) -> {
