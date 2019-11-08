@@ -21,8 +21,11 @@ import com.wtg.videolibrary.adapter.PhotoTypeAdapter;
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
-import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.bean.FolderBean;
 import com.wtg.videolibrary.bean.PhotoTypeBean;
+import com.wtg.videolibrary.listener.LoadMediaListener;
+import com.wtg.videolibrary.task.AllMediaTask;
+import com.wtg.videolibrary.task.ImageMediaTask;
 import com.wtg.videolibrary.utils.PhotoUtils;
 import com.wtg.videolibrary.widget.DividerItemDecoration;
 
@@ -35,7 +38,7 @@ import static android.view.View.GONE;
  * author: admin 2019/10/31
  * desc: 相册的展示的界面
  */
-public class PhotoActivity extends BaseActivity implements View.OnClickListener {
+public class ImagePickerActivity extends BaseActivity implements View.OnClickListener {
     private AppCompatImageView iv_photo_close;
     private LinearLayout ll_select_type;
     private AppCompatTextView tv_photo_type;
@@ -52,7 +55,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
     //显示照片类型
     private RecyclerView recycler_photo_type;
     private PhotoTypeAdapter photoTypeAdapter;
-    private List<PhotoTypeBean> photoTypeBeans = new ArrayList<>();
+    private List<FolderBean> photoTypeBeans = new ArrayList<>();
     //是否是0度
     private boolean isDegree0 = true;
     private Animation animationDegree0;
@@ -69,7 +72,11 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
     private int photoTypePosition = -1;
 
-    private List<String> stringList = new ArrayList<>();
+    private List<String> imagePickerList = new ArrayList<>();
+
+    private Runnable allMediaRunnable;//所有图片视频
+    private Runnable imageMediaRunnable;//所有图片
+    private Runnable videoMediaRunnable;//所有视频
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,6 +90,7 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         initPhotoType();
         initParams();
         initPhoto();
+        initTask();
         setOnClickListener();
     }
 
@@ -125,12 +133,12 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
 
         photoTypeAdapter.setOnItemClickListener((position, view) -> {
             if (photoTypePosition == -1) {
-                photoTypeBeans.get(position).setSelect(true);
+                photoTypeBeans.get(position).setChecked(true);
                 photoTypeAdapter.notifyItemChanged(position, 0);
             } else {
                 if (photoTypePosition != position) {
-                    photoTypeBeans.get(photoTypePosition).setSelect(false);
-                    photoTypeBeans.get(position).setSelect(true);
+                    photoTypeBeans.get(photoTypePosition).setChecked(false);
+                    photoTypeBeans.get(position).setChecked(true);
                     photoTypeAdapter.notifyItemChanged(photoTypePosition, 0);
                     photoTypeAdapter.notifyItemChanged(position, 0);
                 }
@@ -143,18 +151,18 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
             BaseMediaBean photoBean = photoBeans.get(position);
             if (id == R.id.tv_num) {//选中取消选中
                 if (photoBean.isSelect()) {
-                    stringList.remove(photoBean.getPath());
+                    imagePickerList.remove(photoBean.getPath());
                 } else {
-                    if (stringList.size() >= PhotoUtils.getInstance().getMaxNum()) {
-                        Toast.makeText(PhotoActivity.this, "最多可选择9张", Toast.LENGTH_SHORT).show();
+                    if (imagePickerList.size() >= PhotoUtils.getInstance().getMaxNum()) {
+                        Toast.makeText(ImagePickerActivity.this, "最多可选择9张", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (!stringList.contains(photoBean.getPath())) {
-                        stringList.add(photoBean.getPath());
+                    if (!imagePickerList.contains(photoBean.getPath())) {
+                        imagePickerList.add(photoBean.getPath());
                     }
                 }
                 photoBean.setSelect(!photoBean.isSelect());
-                photoAdapter.setFilePaths(stringList);
+                photoAdapter.setFilePaths(imagePickerList);
                 photoAdapter.notifyDataSetChanged();
                 updateFinishButton();
             } else if (id == R.id.view) {//大图跳转预览页面
@@ -309,10 +317,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
      */
     private void initPhotoType() {
         view_shade.setOnClickListener(v -> showOrDismissPop());
-        photoTypeBeans.add(new PhotoTypeBean());
-        photoTypeBeans.add(new PhotoTypeBean());
-        photoTypeBeans.add(new PhotoTypeBean());
-        photoTypeBeans.add(new PhotoTypeBean());
         photoTypeAdapter = new PhotoTypeAdapter(this, photoTypeBeans);
         recycler_photo_type.setLayoutManager(new LinearLayoutManager(this));
         recycler_photo_type.setHasFixedSize(true);
@@ -333,9 +337,6 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
      * 初始化照片
      */
     private void initPhoto() {
-//        for (int i = 1; i < 20; i++) {
-//            photoBeans.add(new BaseMediaBean(i + ""));
-//        }
         photoAdapter = new PhotoAdapter(this, photoBeans);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycler_photo.addItemDecoration(new DividerItemDecoration(this));
@@ -343,6 +344,38 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         recycler_photo.setHasFixedSize(true);
         recycler_photo.setItemViewCacheSize(40);
         recycler_photo.setAdapter(photoAdapter);
+    }
+
+    /**
+     * 初始化扫描任务
+     */
+    private void initTask(){
+        allMediaRunnable = new AllMediaTask(this, new LoadMediaListener() {
+            @Override
+            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
+                photoBeans.addAll(mediaList.get(0).getMediaFileList());
+                photoAdapter.notifyDataSetChanged();
+
+                photoTypeBeans.addAll(mediaList);
+                photoTypeAdapter.notifyDataSetChanged();
+            }
+        });
+
+        allMediaRunnable.run();
+
+        imageMediaRunnable = new ImageMediaTask(this, new LoadMediaListener() {
+            @Override
+            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
+
+            }
+        });
+
+        videoMediaRunnable = new ImageMediaTask(this, new LoadMediaListener() {
+            @Override
+            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
+
+            }
+        });
     }
 
     /**
@@ -370,13 +403,32 @@ public class PhotoActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    /**
+     * 更新完成按钮和预览图片状态
+     */
     private void updateFinishButton() {
-        btn_finish.setEnabled(stringList.size() >= PhotoUtils.getInstance().getMinNum());
-        btn_finish.setText(stringList.size() == 0 ? getResources().getString(R.string.str_button_finish) : String.format("完成(%s/%s)", stringList.size(), PhotoUtils.getInstance().getMaxNum()));
+        btn_finish.setEnabled(imagePickerList.size() >= PhotoUtils.getInstance().getMinNum());
+        btn_finish.setText(imagePickerList.size() == 0 ? getResources().getString(R.string.str_button_finish) : String.format("完成(%s/%s)", imagePickerList.size(), PhotoUtils.getInstance().getMaxNum()));
 
-        tv_preview.setTextColor(stringList.size() >= PhotoUtils.getInstance().getMinNum() ? getResources().getColor(R.color.color_white) : getResources().getColor(R.color.color_888888));
-        tv_preview.setText(stringList.size() == 0 ? getResources().getString(R.string.str_preview) : String.format("预览(%s/%s)", stringList.size(), PhotoUtils.getInstance().getMaxNum()));
+        tv_preview.setEnabled(imagePickerList.size() > 0);
+        tv_preview.setTextColor(imagePickerList.size() >= PhotoUtils.getInstance().getMinNum() ? getResources().getColor(R.color.color_white) : getResources().getColor(R.color.color_888888));
+        tv_preview.setText(imagePickerList.size() == 0 ? getResources().getString(R.string.str_preview) : String.format("预览(%s/%s)", imagePickerList.size(), PhotoUtils.getInstance().getMaxNum()));
     }
+
+    /**
+     * 开启加载弹框
+     */
+    private void openLoadingDialog(){
+
+    }
+
+    /**
+     * 关闭加载弹框
+     */
+    private void closeLoadingDialog(){
+
+    }
+
 
     @Override
     public void onBackPressed() {

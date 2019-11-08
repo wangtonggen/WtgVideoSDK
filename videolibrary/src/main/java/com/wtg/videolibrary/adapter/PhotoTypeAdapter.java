@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wtg.videolibrary.R;
+import com.wtg.videolibrary.bean.FolderBean;
 import com.wtg.videolibrary.bean.PhotoTypeBean;
 import com.wtg.videolibrary.holder.PhotoTypeHolder;
 
@@ -21,8 +22,9 @@ import java.util.List;
  */
 public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     private Context context;
-    private List<PhotoTypeBean> list;
-    public PhotoTypeAdapter(Context context, List<PhotoTypeBean> list) {
+    private List<FolderBean> list;
+
+    public PhotoTypeAdapter(Context context, List<FolderBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -30,7 +32,7 @@ public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     @NonNull
     @Override
     public PhotoTypeHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_type,viewGroup,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_type, viewGroup, false);
         PhotoTypeHolder photoTypeHolder = new PhotoTypeHolder(view);
         photoTypeHolder.setOnItemClickListener(onItemClickListener);
         return photoTypeHolder;
@@ -39,12 +41,10 @@ public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     @Override
     public void onBindViewHolder(@NonNull PhotoTypeHolder photoTypeHolder, int i) {
         photoTypeHolder.itemView.setTag(i);
-        PhotoTypeBean photoTypeBean = list.get(i);
-        photoTypeHolder.getIv_photo_select().setVisibility(photoTypeBean.isSelect()?View.VISIBLE:View.INVISIBLE);
+        FolderBean photoTypeBean = list.get(i);
+        photoTypeHolder.getIv_photo_select().setVisibility(photoTypeBean.isChecked() ? View.VISIBLE : View.INVISIBLE);
 //        photoTypeHolder.getTv_photo_type().setText(photoTypeBean.getPhotoType());
-//        photoTypeHolder.getTv_photo_num().setText(String.format("%s",photoTypeBean.getPhotoNum()));
-//        photoTypeHolder.tvClick.setTag(position);
-//        vh.tvLongClick.setTag(position);
+        photoTypeHolder.getTv_photo_num().setText(String.format("%s",photoTypeBean.getMediaFileList().size()));
     }
 
     @Override

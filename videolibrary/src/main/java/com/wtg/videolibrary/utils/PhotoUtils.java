@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
-import com.wtg.videolibrary.ui.PhotoActivity;
+import com.wtg.videolibrary.ui.ImagePickerActivity;
 
 /**
  * author: admin 2019/11/4
@@ -90,6 +90,6 @@ public class PhotoUtils {
      * @param context 上下文
      */
     public void startAlbum(Context context){
-        context.startActivity(new Intent(context, PhotoActivity.class));
+        context.startActivity(new Intent(context, ImagePickerActivity.class));
     }
 }

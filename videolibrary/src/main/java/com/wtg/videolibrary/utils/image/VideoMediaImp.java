@@ -36,7 +36,8 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
 
     @Override
     protected String getSelection() {
-        return MediaStore.Video.Media.DATE_TAKEN + " desc";
+        return null;
+//        return MediaStore.Video.Media.DATE_TAKEN + " desc";
     }
 
     @Override
