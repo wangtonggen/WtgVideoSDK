@@ -22,10 +22,8 @@ import com.wtg.videolibrary.annotation.ImageTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.bean.FolderBean;
-import com.wtg.videolibrary.bean.PhotoTypeBean;
 import com.wtg.videolibrary.listener.LoadMediaListener;
 import com.wtg.videolibrary.task.AllMediaTask;
-import com.wtg.videolibrary.task.ImageMediaTask;
 import com.wtg.videolibrary.utils.PhotoUtils;
 import com.wtg.videolibrary.widget.DividerItemDecoration;
 
@@ -70,13 +68,9 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     private Animation animationShadeShow;
     private Animation animationShadeGone;
 
-    private int photoTypePosition = -1;
+    private int photoTypePosition = 0;
 
     private List<String> imagePickerList = new ArrayList<>();
-
-    private Runnable allMediaRunnable;//所有图片视频
-    private Runnable imageMediaRunnable;//所有图片
-    private Runnable videoMediaRunnable;//所有视频
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,7 +82,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         initView();
         initAnim();
         initPhotoType();
-        initParams();
+        initCameraParams();
         initPhoto();
         initTask();
         setOnClickListener();
@@ -98,7 +92,11 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_photo_close) {
-            finish();
+            if (view_shade != null && view_shade.getVisibility() == View.VISIBLE) {
+                showOrDismissPop();
+            }else {
+                finish();
+            }
         } else if (id == R.id.ll_select_type) {
             startArrowAnim();
             showOrDismissPop();
@@ -141,9 +139,19 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                     photoTypeBeans.get(position).setChecked(true);
                     photoTypeAdapter.notifyItemChanged(photoTypePosition, 0);
                     photoTypeAdapter.notifyItemChanged(position, 0);
+
+                    photoBeans.clear();
+//                    initCameraParams();
+                    photoBeans.addAll(photoTypeBeans.get(position).getMediaFileList());
+                    photoAdapter.notifyDataSetChanged();
+                    recycler_photo.scrollToPosition(0);//滑动到顶部
+
+                    tv_photo_type.setText(photoTypeBeans.get(position).getFolderName());
                 }
             }
             photoTypePosition = position;
+            startArrowAnim();
+            showOrDismissPop();
         });
 
         photoAdapter.setOnItemClickListener((position, view) -> {
@@ -324,7 +332,10 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         recycler_photo_type.setAdapter(photoTypeAdapter);
     }
 
-    private void initParams(){
+    /**
+     * 初始化相机
+     */
+    private void initCameraParams(){
         if (PhotoUtils.getInstance().isShowCamera()){
             BaseMediaBean photoBean = new BaseMediaBean();
             photoBean.setPath("camera");
@@ -350,10 +361,12 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
      * 初始化扫描任务
      */
     private void initTask(){
-        allMediaRunnable = new AllMediaTask(this, new LoadMediaListener() {
+        Runnable allMediaRunnable = new AllMediaTask(this, new LoadMediaListener() {
             @Override
             public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
-                photoBeans.addAll(mediaList.get(0).getMediaFileList());
+                FolderBean folderBean = mediaList.get(0);
+                folderBean.setChecked(true);
+                photoBeans.addAll(folderBean.getMediaFileList());
                 photoAdapter.notifyDataSetChanged();
 
                 photoTypeBeans.addAll(mediaList);
@@ -362,20 +375,6 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         });
 
         allMediaRunnable.run();
-
-        imageMediaRunnable = new ImageMediaTask(this, new LoadMediaListener() {
-            @Override
-            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
-
-            }
-        });
-
-        videoMediaRunnable = new ImageMediaTask(this, new LoadMediaListener() {
-            @Override
-            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
-
-            }
-        });
     }
 
     /**

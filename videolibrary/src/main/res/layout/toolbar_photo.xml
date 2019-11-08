@@ -37,7 +37,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textColor="@color/color_white"
             android:textSize="12sp"
-            android:text="视频和图片"/>
+            android:text="图片和视频"/>
         <android.support.constraint.ConstraintLayout
             android:layout_width="18dp"
             android:layout_height="18dp"

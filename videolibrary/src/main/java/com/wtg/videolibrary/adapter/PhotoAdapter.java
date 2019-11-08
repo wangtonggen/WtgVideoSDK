@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.annotation.ImageTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
@@ -55,12 +56,13 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 photoHolder.itemView.setTag(i);
                 photoHolder.tv_num.setTag(i);
                 if (photoHolder.iv_photo != null) {
-                    photoHolder.iv_photo.setTag(i);
+                    photoHolder.iv_photo.setTag(null);
+                    Glide.with(context).load(photoBean.getPath()).into(photoHolder.iv_photo);
                 }
                 if (photoHolder.view != null) {
                     photoHolder.view.setTag(i);
                 }
-                Log.e("tag",photoHolder.tv_num.getTag()+"---");
+//                Log.e("tag",photoHolder.tv_num.getTag()+"---"+photoBean.getPath());
                 photoHolder.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
                 if (photoBean.isSelect()) {
                     if (filePaths != null) {
