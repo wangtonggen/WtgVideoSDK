@@ -16,6 +16,7 @@ public class PhotoUtils {
     private boolean isShowCamera = true;//默认显示相机
     private int imageType = ImageTypeAnont.HOLDER_TYPE_ALL;//默认显示所有的类型
     private boolean isCompress = true;//默认压缩
+    private boolean isOriginalData = true;//是否有原始数据
     private int maxNum = 9;//选择照片的最大数 默认9
     private int minNum = 1;//选择照片的最小值 默认1
 
@@ -87,9 +88,18 @@ public class PhotoUtils {
 
     /**
      * 打开相册（最后调用）
+     *
      * @param context 上下文
      */
-    public void startAlbum(Context context){
+    public void startAlbum(Context context) {
         context.startActivity(new Intent(context, ImagePickerActivity.class));
+    }
+
+    public boolean isOriginalData() {
+        return isOriginalData;
+    }
+
+    public void setOriginalData(boolean originalData) {
+        isOriginalData = originalData;
     }
 }

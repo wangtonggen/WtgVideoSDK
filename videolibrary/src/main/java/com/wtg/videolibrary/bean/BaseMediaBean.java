@@ -26,6 +26,8 @@ public class BaseMediaBean implements Serializable {
     private long duration;
     //添加日期
     private long dateToken;
+    //压缩后的文件的地址
+    private String compressMediaPath;
 
     public String getPath() {
         return path;
@@ -91,4 +93,11 @@ public class BaseMediaBean implements Serializable {
         this.imageType = imageType;
     }
 
+    public String getCompressMediaPath() {
+        return compressMediaPath;
+    }
+
+    public void setCompressMediaPath(String compressMediaPath) {
+        this.compressMediaPath = compressMediaPath;
+    }
 }

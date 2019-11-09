@@ -1,5 +1,6 @@
 package com.wtg.videolibrary.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
@@ -9,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -27,6 +29,7 @@ import com.wtg.videolibrary.task.AllMediaTask;
 import com.wtg.videolibrary.utils.PhotoUtils;
 import com.wtg.videolibrary.widget.DividerItemDecoration;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,16 +71,27 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     private Animation animationShadeShow;
     private Animation animationShadeGone;
 
+    //选择的类型
     private int photoTypePosition = 0;
 
-    private List<String> imagePickerList = new ArrayList<>();
+    /**
+     * 选中图片的集合
+     */
+    private List<BaseMediaBean> imagePickerList = new ArrayList<>();
 
+    private List<BaseMediaBean> list;
+
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setWindowStatusBarColor(R.color.color_333232);
         setContentView(R.layout.activity_photo);
+
+        if (PhotoUtils.getInstance().isOriginalData()) {
+            list = (List<BaseMediaBean>) getIntent().getSerializableExtra("list");
+        }
 
         initView();
         initAnim();
@@ -94,13 +108,16 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         if (id == R.id.iv_photo_close) {
             if (view_shade != null && view_shade.getVisibility() == View.VISIBLE) {
                 showOrDismissPop();
-            }else {
+            } else {
                 finish();
             }
         } else if (id == R.id.ll_select_type) {
             startArrowAnim();
             showOrDismissPop();
         } else if (id == R.id.btn_finish) {
+            Intent intent = new Intent();
+            intent.putExtra("list", (Serializable) imagePickerList);
+            setResult(1002, intent);
             finish();
         }
     }
@@ -141,7 +158,9 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                     photoTypeAdapter.notifyItemChanged(position, 0);
 
                     photoBeans.clear();
-//                    initCameraParams();
+                    if (position == 0) {
+                        initCameraParams();
+                    }
                     photoBeans.addAll(photoTypeBeans.get(position).getMediaFileList());
                     photoAdapter.notifyDataSetChanged();
                     recycler_photo.scrollToPosition(0);//滑动到顶部
@@ -157,28 +176,35 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         photoAdapter.setOnItemClickListener((position, view) -> {
             int id = view.getId();
             BaseMediaBean photoBean = photoBeans.get(position);
+            Log.e("hello", photoBean + "---");
+//            for (BaseMediaBean baseMediaBean : list) {
+//                Log.e("hello word",baseMediaBean+"---");
+//            }
             if (id == R.id.tv_num) {//选中取消选中
                 if (photoBean.isSelect()) {
-                    imagePickerList.remove(photoBean.getPath());
+                    imagePickerList.remove(photoBean);
                 } else {
                     if (imagePickerList.size() >= PhotoUtils.getInstance().getMaxNum()) {
                         Toast.makeText(ImagePickerActivity.this, "最多可选择9张", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    if (!imagePickerList.contains(photoBean.getPath())) {
-                        imagePickerList.add(photoBean.getPath());
+                    if (!imagePickerList.contains(photoBean)) {
+                        imagePickerList.add(photoBean);
                     }
                 }
                 photoBean.setSelect(!photoBean.isSelect());
                 photoAdapter.setFilePaths(imagePickerList);
-                photoAdapter.notifyDataSetChanged();
+                photoAdapter.notifyItemChanged(position, 0);
+                for (BaseMediaBean baseMediaBean : imagePickerList) {
+                    photoAdapter.notifyItemChanged(photoBeans.indexOf(baseMediaBean), 0);
+                }
                 updateFinishButton();
             } else if (id == R.id.view) {//大图跳转预览页面
                 Log.e("222", "遮罩");
             } else if (id == R.id.iv_photo) {//跳转预览页页面
                 Log.e("333", "photo");
             } else {
-                if (photoBean.getImageType() == ImageTypeAnont.HOLDER_TYPE_CAMERA){
+                if (photoBean.getImageType() == ImageTypeAnont.HOLDER_TYPE_CAMERA) {
                     //跳转拍照页面
                     return;
                 }
@@ -326,6 +352,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     private void initPhotoType() {
         view_shade.setOnClickListener(v -> showOrDismissPop());
         photoTypeAdapter = new PhotoTypeAdapter(this, photoTypeBeans);
+        photoTypeAdapter.setHasStableIds(true);
         recycler_photo_type.setLayoutManager(new LinearLayoutManager(this));
         recycler_photo_type.setHasFixedSize(true);
         recycler_photo_type.setItemViewCacheSize(10);
@@ -335,8 +362,8 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     /**
      * 初始化相机
      */
-    private void initCameraParams(){
-        if (PhotoUtils.getInstance().isShowCamera()){
+    private void initCameraParams() {
+        if (PhotoUtils.getInstance().isShowCamera()) {
             BaseMediaBean photoBean = new BaseMediaBean();
             photoBean.setPath("camera");
             photoBean.setImageType(ImageTypeAnont.HOLDER_TYPE_CAMERA);
@@ -349,6 +376,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
      */
     private void initPhoto() {
         photoAdapter = new PhotoAdapter(this, photoBeans);
+        photoAdapter.setHasStableIds(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycler_photo.addItemDecoration(new DividerItemDecoration(this));
         recycler_photo.setLayoutManager(gridLayoutManager);
@@ -360,18 +388,34 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     /**
      * 初始化扫描任务
      */
-    private void initTask(){
-        Runnable allMediaRunnable = new AllMediaTask(this, new LoadMediaListener() {
-            @Override
-            public void loadMediaSuccess(ArrayList<FolderBean> mediaList) {
-                FolderBean folderBean = mediaList.get(0);
-                folderBean.setChecked(true);
-                photoBeans.addAll(folderBean.getMediaFileList());
-                photoAdapter.notifyDataSetChanged();
-
-                photoTypeBeans.addAll(mediaList);
-                photoTypeAdapter.notifyDataSetChanged();
+    private void initTask() {
+        Runnable allMediaRunnable = new AllMediaTask(this, mediaList -> {
+            FolderBean folderBean = mediaList.get(0);
+            folderBean.setChecked(true);
+            photoBeans.addAll(folderBean.getMediaFileList());
+            tv_photo_type.setText(folderBean.getFolderName());
+            if (PhotoUtils.getInstance().isOriginalData()){
+                if (list == null || list.size() == 0){
+                    return;
+                }
+                imagePickerList.clear();
+                flag:for (BaseMediaBean baseMediaBean : photoBeans) {
+                    for (BaseMediaBean mediaBean : list) {
+                        if (baseMediaBean.getPath().equals(mediaBean.getPath())) {
+                            imagePickerList.add(baseMediaBean);
+                        }
+                        if (imagePickerList.size() > PhotoUtils.getInstance().getMaxNum()){
+                            break flag;
+                        }
+                    }
+                }
             }
+            Log.e("list",imagePickerList.size()+"---");
+            photoAdapter.setFilePaths(imagePickerList);
+            photoAdapter.notifyDataSetChanged();
+            //所有的文件夹
+            photoTypeBeans.addAll(mediaList);
+            photoTypeAdapter.notifyDataSetChanged();
         });
 
         allMediaRunnable.run();
@@ -417,14 +461,14 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     /**
      * 开启加载弹框
      */
-    private void openLoadingDialog(){
+    private void openLoadingDialog() {
 
     }
 
     /**
      * 关闭加载弹框
      */
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
 
     }
 

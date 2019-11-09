@@ -37,7 +37,6 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
     @Override
     protected String getSelection() {
         return null;
-//        return MediaStore.Video.Media.DATE_TAKEN + " desc";
     }
 
     @Override
@@ -47,7 +46,8 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
 
     @Override
     protected String getSort() {
-        return null;
+//        return null;
+        return MediaStore.Video.Media.DATE_TAKEN+ " desc";
     }
 
     @Override
