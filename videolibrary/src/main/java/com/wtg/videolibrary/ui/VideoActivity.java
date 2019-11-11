@@ -15,7 +15,7 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.base.BaseActivity;
-import com.wtg.videolibrary.utils.Fileutils;
+import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.ScreenUtils;
 import com.wtg.videolibrary.widget.AutoFitTextureView;
 import com.wtg.videolibrary.widget.CameraController;
@@ -47,7 +47,6 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_video);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        setWindowStatusBarColor(R.color.color_black);
         sv_record = findViewById(R.id.sv_record);
         sv_record.setAspectRatio(ScreenUtils.getScreenWidth(this),ScreenUtils.getScreenHeight(this));
         circleButtonView = findViewById(R.id.circleButtonView);
@@ -63,7 +62,7 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                         @Override
                         public void run() {
                             Log.e("tag",path+"---111");
-                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(Fileutils.IMAGE_ROOT),false);
+                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
                             Log.e("eee",filePath+"---");
                         }
                     }.start();
@@ -73,7 +72,7 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                         @Override
                         public void run() {
                             try {
-                                String filePath1 = SiliCompressor.with(VideoActivity.this).compressVideo(path, Fileutils.IMAGE_ROOT,0,0,6000000);
+                                String filePath1 = SiliCompressor.with(VideoActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,6000000);
                                 Log.e("eee",filePath1+"---filePath1");
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();

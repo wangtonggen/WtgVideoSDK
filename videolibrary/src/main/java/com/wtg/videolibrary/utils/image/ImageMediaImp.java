@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.bean.PhotoMediaBean;
 
@@ -45,7 +46,6 @@ public class ImageMediaImp extends BaseImageMedia<BaseMediaBean> {
 
     @Override
     protected String getSort() {
-//        return null;
         return MediaStore.Images.Media.DATE_TAKEN + " desc";
     }
 
@@ -60,6 +60,7 @@ public class ImageMediaImp extends BaseImageMedia<BaseMediaBean> {
         PhotoMediaBean mediaFile = new PhotoMediaBean();
         mediaFile.setPath(path);
         mediaFile.setMime(mime);
+        mediaFile.setHolderType(MultiHolderTypeAnont.HOLDER_TYPE_IMAGE);
         mediaFile.setFolderId(folderId);
         mediaFile.setFolderName(folderName);
         mediaFile.setDateToken(dateToken);

@@ -2,13 +2,13 @@
 <resources>
     <!--选择照片按钮的样式-->
     <style name="btn_photo_style">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_width">80dp</item>
+        <item name="android:layout_height">28dp</item>
         <item name="android:paddingStart">10dp</item>
         <item name="android:paddingEnd">10dp</item>
         <item name="android:background">@drawable/selector_button_photo</item>
         <item name="android:textColor">@color/color_button_photo</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -16,5 +16,11 @@
     <style name="pop_photo_type_style">
         <item name="android:windowEnterAnimation">@anim/anim_pop_photo_type_show</item>
         <item name="android:windowExitAnimation">@anim/anim_pop_photo_type_hide</item>
+    </style>
+
+    <!--加载框动画-->
+    <style name="dialog_loading_style" parent="android:Animation">
+        <item name="android:windowEnterAnimation" >@anim/anim_loading_in</item>
+        <item name="android:windowExitAnimation" >@anim/anim_loading_out</item>
     </style>
 </resources>

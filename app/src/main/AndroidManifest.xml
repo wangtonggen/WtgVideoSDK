@@ -24,6 +24,7 @@
         </activity>
 
         <activity android:name="com.wtg.videolibrary.ui.ImagePickerActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.wtg.videolibrary.ui.VideoActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

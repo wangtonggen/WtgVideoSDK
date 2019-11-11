@@ -1,6 +1,6 @@
 package com.wtg.videolibrary.bean;
 
-import com.wtg.videolibrary.annotation.ImageTypeAnont;
+import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 
 import java.io.Serializable;
 
@@ -12,8 +12,8 @@ public class BaseMediaBean implements Serializable {
     //是否选中
     private boolean isSelect;
     //文件的类型
-    @ImageTypeAnont.ImageType
-    private int imageType = ImageTypeAnont.HOLDER_TYPE_IMAGE;
+    @MultiHolderTypeAnont.MultiHolderType
+    private int holderType = MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
     //文件路径
     private String path;
     //文件后缀
@@ -85,12 +85,13 @@ public class BaseMediaBean implements Serializable {
         isSelect = select;
     }
 
-    public int getImageType() {
-        return imageType;
+    @MultiHolderTypeAnont.MultiHolderType
+    public int getHolderType() {
+        return holderType;
     }
 
-    public void setImageType(int imageType) {
-        this.imageType = imageType;
+    public void setHolderType(@MultiHolderTypeAnont.MultiHolderType int holderType) {
+        this.holderType = holderType;
     }
 
     public String getCompressMediaPath() {

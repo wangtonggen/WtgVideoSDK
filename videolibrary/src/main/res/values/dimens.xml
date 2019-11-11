@@ -3,6 +3,6 @@
     <dimen name="dimen_recycler_item_width">80dp</dimen>
     <dimen name="dimen_recycler_item_height">80dp</dimen>
 
-    <dimen name="dimen_recycler_item_select_width">20dp</dimen>
-    <dimen name="dimen_recycler_item_select_height">20dp</dimen>
+    <dimen name="dimen_recycler_item_select_width">17dp</dimen>
+    <dimen name="dimen_recycler_item_select_height">17dp</dimen>
 </resources>

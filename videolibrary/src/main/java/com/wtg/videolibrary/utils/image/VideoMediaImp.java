@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.bean.VideoMediaBean;
 
@@ -46,7 +47,6 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
 
     @Override
     protected String getSort() {
-//        return null;
         return MediaStore.Video.Media.DATE_TAKEN+ " desc";
     }
 
@@ -62,6 +62,7 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
         VideoMediaBean mediaFile = new VideoMediaBean();
         mediaFile.setPath(path);
         mediaFile.setMime(mime);
+        mediaFile.setHolderType(MultiHolderTypeAnont.HOLDER_TYPE_VIDEO);
         mediaFile.setFolderId(folderId);
         mediaFile.setFolderName(folderName);
         mediaFile.setDuration(duration);
