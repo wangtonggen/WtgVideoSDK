@@ -9,7 +9,8 @@ import java.io.File;
  * desc: 文件工具类
  */
 public class FileUtils {
-    public static String IMAGE_ROOT = Environment.getExternalStorageState()+"/AAA";
+//    public static String IMAGE_ROOT = Environment.getExternalStorageState()+"/AAA";
+    public static String IMAGE_ROOT = Environment.getExternalStorageDirectory()+"/AAA";
 
     public static void createCompress(String dir){
         File file = new File(dir);
