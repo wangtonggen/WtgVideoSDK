@@ -29,4 +29,15 @@
         app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
         android:textSize="12sp"/>
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_video_time"
+        android:visibility="invisible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 </com.wtg.videolibrary.widget.MyConstraintLayout>

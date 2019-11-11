@@ -14,12 +14,14 @@ import com.wtg.videolibrary.R;
 public class PhotoHolder extends BaseHolder{
     public AppCompatImageView iv_photo;
     public AppCompatTextView tv_num;
+    public AppCompatTextView tv_video_time;
     public View view;
 
     public PhotoHolder(@NonNull View itemView) {
         super(itemView);
         iv_photo = itemView.findViewById(R.id.iv_photo);
         tv_num = itemView.findViewById(R.id.tv_num);
+        tv_video_time = itemView.findViewById(R.id.tv_video_time);
         view = itemView.findViewById(R.id.view);
 
         itemView.setOnClickListener(this);

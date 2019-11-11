@@ -58,6 +58,7 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 PhotoHolder photoHolder = (PhotoHolder) baseHolder;
                 photoHolder.itemView.setTag(i);
                 photoHolder.tv_num.setTag(i);
+                photoHolder.tv_video_time.setVisibility(View.INVISIBLE);
                 if (photoHolder.iv_photo != null) {
                     Glide.with(context).load(photoBean.getPath()).into(photoHolder.iv_photo);
                 }
@@ -77,25 +78,27 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 }
                 break;
             case MultiHolderTypeAnont.HOLDER_TYPE_VIDEO:
-                PhotoHolder photoHolder1 = (PhotoHolder) baseHolder;
-                photoHolder1.itemView.setTag(i);
-                photoHolder1.tv_num.setTag(i);
-                if (photoHolder1.iv_photo != null) {
-                    Glide.with(context).load(photoBean.getPath()).into(photoHolder1.iv_photo);
+                PhotoHolder videoHolder = (PhotoHolder) baseHolder;
+                videoHolder.itemView.setTag(i);
+                videoHolder.tv_num.setTag(i);
+                Log.e("video","videoTime="+photoBean.getDuration());
+                videoHolder.tv_video_time.setVisibility(View.INVISIBLE);
+                if (videoHolder.iv_photo != null) {
+                    Glide.with(context).load(photoBean.getPath()).into(videoHolder.iv_photo);
                 }
-                if (photoHolder1.view != null) {
-                    photoHolder1.view.setTag(i);
+                if (videoHolder.view != null) {
+                    videoHolder.view.setTag(i);
                 }
-                photoHolder1.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
-                photoHolder1.view.setBackgroundResource(photoBean.isSelect() ? R.color.color_99000000 : R.color.color_33000000);
+                videoHolder.tv_num.setBackgroundResource(photoBean.isSelect() ? R.drawable.shape_num_selected : R.drawable.shape_num_unselect);
+                videoHolder.view.setBackgroundResource(photoBean.isSelect() ? R.color.color_99000000 : R.color.color_33000000);
                 if (photoBean.isSelect()) {
                     if (filePaths != null) {
                         if (filePaths.contains(photoBean)) {
-                            photoHolder1.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean) + 1));
+                            videoHolder.tv_num.setText(String.format("%s", filePaths.indexOf(photoBean) + 1));
                         }
                     }
                 } else {
-                    photoHolder1.tv_num.setText("");
+                    videoHolder.tv_num.setText("");
                 }
                 break;
             case MultiHolderTypeAnont.Holder_TYPE_CAMERA:
