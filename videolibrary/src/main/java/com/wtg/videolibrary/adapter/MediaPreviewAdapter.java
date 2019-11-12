@@ -2,6 +2,7 @@ package com.wtg.videolibrary.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.holder.MediaPreviewHolder;
 
 import java.util.List;
+
+import cn.jzvd.Jzvd;
 
 /**
  * author: wtg  2019/11/12 0012
@@ -42,6 +45,8 @@ public class MediaPreviewAdapter extends BaseAdapter<BaseMediaBean, MediaPreview
             case MultiHolderTypeAnont.HOLDER_TYPE_VIDEO://视频
                 mediaPreviewHolder.video_player.setVisibility(View.VISIBLE);
                 mediaPreviewHolder.iv_image.setVisibility(View.GONE);
+//                Log.e("video_path",photoBean.getPath());
+                mediaPreviewHolder.video_player.setUp(photoBean.getPath(),"", Jzvd.SCREEN_NORMAL);
                 break;
         }
     }

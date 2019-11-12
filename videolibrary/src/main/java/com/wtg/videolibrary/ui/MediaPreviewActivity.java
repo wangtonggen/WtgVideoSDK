@@ -11,11 +11,9 @@ import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.adapter.MediaPreviewAdapter;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.utils.common.MediaPreviewUtils;
 
 import java.util.List;
-
-import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
-import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_POSITION;
 
 
 /**
@@ -43,13 +41,15 @@ public class MediaPreviewActivity extends BaseActivity {
 
         recycler_preview = findViewById(R.id.recycler_preview);
 
-        mIndex = getIntent().getIntExtra(MEDIA_PARAMS_POSITION, 0);
-        baseMediaBeans = (List<BaseMediaBean>) getIntent().getSerializableExtra(MEDIA_PARAMS_NAME);
+        mIndex = MediaPreviewUtils.getInstance().getPosition();
+        baseMediaBeans = MediaPreviewUtils.getInstance().getList();
         //使用recycler实现viewPager的翻页效果
         mediaPreviewAdapter = new MediaPreviewAdapter(this, baseMediaBeans);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setInitialPrefetchItemCount(2);
         recycler_preview.setItemViewCacheSize(40);
         recycler_preview.setHasFixedSize(true);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycler_preview.setLayoutManager(layoutManager);
         recycler_preview.setAdapter(mediaPreviewAdapter);
         PagerSnapHelper pagerSnapHelper = new PagerSnapHelper();

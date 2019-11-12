@@ -31,6 +31,7 @@ import com.wtg.videolibrary.task.ImageMediaTask;
 import com.wtg.videolibrary.task.VideoMediaTask;
 import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.PhotoUtils;
+import com.wtg.videolibrary.utils.common.MediaPreviewUtils;
 import com.wtg.videolibrary.widget.DividerItemDecoration;
 import com.wtg.videolibrary.widget.LoadingDialog;
 
@@ -139,9 +140,10 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 finish();
             }
         } else if (id == R.id.tv_preview) {
+            MediaPreviewUtils.getInstance().setList(imagePickerList);
             Intent intent = new Intent(this, MediaPreviewActivity.class);
-            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
-            intent.putExtra(MEDIA_PARAMS_POSITION, 0);
+//            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
+//            intent.putExtra(MEDIA_PARAMS_POSITION, 0);
             startActivity(intent);
         }
     }
@@ -220,9 +222,11 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 }
                 updateFinishButton();
             } else if (id == R.id.view) {//大图跳转预览页面
+                MediaPreviewUtils.getInstance().setList(photoBeans);
+                MediaPreviewUtils.getInstance().setPosition(position);
                 Intent intent = new Intent(this, MediaPreviewActivity.class);
-                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) photoBeans);
-                intent.putExtra(MEDIA_PARAMS_POSITION, position);
+//                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) photoBeans);
+//                intent.putExtra(MEDIA_PARAMS_POSITION, position);
                 startActivity(intent);
             } else {
                 if (photoBean.getHolderType() == MultiHolderTypeAnont.Holder_TYPE_CAMERA) {
