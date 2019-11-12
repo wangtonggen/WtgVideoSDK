@@ -23,15 +23,11 @@ import java.util.List;
  * author: admin 2019/10/31
  * desc: 相册的adapter
  */
-public class PhotoAdapter extends BaseAdapter<BaseHolder> {
-    private Context context;
-    private List<BaseMediaBean> list;
+public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
     private List<BaseMediaBean> filePaths;
-    private SparseArray<String> paths = new SparseArray<>();
 
     public PhotoAdapter(Context context, List<BaseMediaBean> list) {
-        this.context = context;
-        this.list = list;
+      super(context,list);
     }
 
     @NonNull
@@ -39,10 +35,10 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
     public BaseHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         BaseHolder baseHolder;
         if (i == MultiHolderTypeAnont.Holder_TYPE_CAMERA) {
-            View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_camera, viewGroup, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_item_photo_camera, viewGroup, false);
             baseHolder = new CameraHolder(view);
         } else {
-            View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo, viewGroup, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_item_photo, viewGroup, false);
             baseHolder = new PhotoHolder(view);
         }
         baseHolder.setOnItemClickListener(onItemClickListener);
@@ -51,8 +47,7 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BaseHolder baseHolder, int i) {
-        BaseMediaBean photoBean = list.get(i);
-        Log.e("ppp", photoBean.isSelect() + "---" + i);
+        BaseMediaBean photoBean = mList.get(i);
         switch (photoBean.getHolderType()) {
             case MultiHolderTypeAnont.HOLDER_TYPE_IMAGE:
                 PhotoHolder photoHolder = (PhotoHolder) baseHolder;
@@ -60,7 +55,7 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 photoHolder.tv_num.setTag(i);
                 photoHolder.tv_video_time.setVisibility(View.INVISIBLE);
                 if (photoHolder.iv_photo != null) {
-                    Glide.with(context).load(photoBean.getPath()).into(photoHolder.iv_photo);
+                    Glide.with(mContext).load(photoBean.getPath()).into(photoHolder.iv_photo);
                 }
                 if (photoHolder.view != null) {
                     photoHolder.view.setTag(i);
@@ -84,7 +79,7 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
                 Log.e("video","videoTime="+photoBean.getDuration());
                 videoHolder.tv_video_time.setVisibility(View.INVISIBLE);
                 if (videoHolder.iv_photo != null) {
-                    Glide.with(context).load(photoBean.getPath()).into(videoHolder.iv_photo);
+                    Glide.with(mContext).load(photoBean.getPath()).into(videoHolder.iv_photo);
                 }
                 if (videoHolder.view != null) {
                     videoHolder.view.setTag(i);
@@ -111,12 +106,12 @@ public class PhotoAdapter extends BaseAdapter<BaseHolder> {
 
     @Override
     public int getItemViewType(int position) {
-        return list.get(position).getHolderType();
+        return mList.get(position).getHolderType();
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return mList.size();
     }
 
     public List<BaseMediaBean> getFilePaths() {

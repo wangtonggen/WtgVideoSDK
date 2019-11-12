@@ -22,19 +22,16 @@ import java.util.List;
  * author: admin 2019/11/3
  * desc: 选择照片类型的adapter
  */
-public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
-    private Context context;
-    private List<FolderBean> list;
+public class PhotoTypeAdapter extends BaseAdapter<FolderBean,PhotoTypeHolder> {
 
     public PhotoTypeAdapter(Context context, List<FolderBean> list) {
-        this.context = context;
-        this.list = list;
+       super(context, list);
     }
 
     @NonNull
     @Override
     public PhotoTypeHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.recycler_item_photo_type, viewGroup, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_item_photo_type, viewGroup, false);
         PhotoTypeHolder photoTypeHolder = new PhotoTypeHolder(view);
         photoTypeHolder.setOnItemClickListener(onItemClickListener);
         return photoTypeHolder;
@@ -43,15 +40,10 @@ public class PhotoTypeAdapter extends BaseAdapter<PhotoTypeHolder> {
     @Override
     public void onBindViewHolder(@NonNull PhotoTypeHolder photoTypeHolder, int i) {
         photoTypeHolder.itemView.setTag(i);
-        FolderBean photoTypeBean = list.get(i);
+        FolderBean photoTypeBean = mList.get(i);
         photoTypeHolder.iv_photo_select.setVisibility(photoTypeBean.isChecked() ? View.VISIBLE : View.INVISIBLE);
         photoTypeHolder.tv_photo_type.setText(photoTypeBean.getFolderName());
-        Glide.with(context).load(photoTypeBean.getMediaFileList().get(0).getPath()).into(photoTypeHolder.iv_photo);
+        Glide.with(mContext).load(photoTypeBean.getMediaFileList().get(0).getPath()).into(photoTypeHolder.iv_photo);
         photoTypeHolder.tv_photo_num.setText(String.format("%s",photoTypeBean.getMediaFileList().size()));
-    }
-
-    @Override
-    public int getItemCount() {
-        return list.size();
     }
 }

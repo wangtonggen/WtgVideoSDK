@@ -12,7 +12,7 @@ import com.wtg.videolibrary.listener.OnItemLongClickListener;
  * author: admin 2019/11/4
  * desc: holder基类
  */
-public abstract class BaseHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+public abstract class BaseHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
     //item点击事件
     protected OnItemClickListener onItemClickListener;
     //子view点击事件
@@ -26,25 +26,25 @@ public abstract class BaseHolder extends RecyclerView.ViewHolder implements View
 
     @Override
     public void onClick(View v) {
-        if (onItemClickListener != null){
-            if (v != null){
-                int position = (int)v.getTag();
-                onMyClick(position,v);
+        if (onItemClickListener != null) {
+            if (v != null && v.getTag() != null) {
+                int position = (int) v.getTag();
+                onMyClick(position, v);
             }
         }
     }
 
     @Override
     public boolean onLongClick(View v) {
-        if (onLongClickListener != null){
-            if (v != null){
-                int position = (int)v.getTag();
-                onMyLongClick(position,v);
+        if (onLongClickListener != null) {
+            if (v != null && v.getTag() != null) {
+                int position = (int) v.getTag();
+                onMyLongClick(position, v);
                 return true;
-            }else {
+            } else {
                 return true;
             }
-        }else {
+        } else {
             return false;
         }
     }
@@ -73,8 +73,8 @@ public abstract class BaseHolder extends RecyclerView.ViewHolder implements View
         this.onLongClickListener = onLongClickListener;
     }
 
-    abstract void onMyClick(int position,View view);
+    abstract void onMyClick(int position, View view);
 
-    abstract void onMyLongClick(int position,View view);
+    abstract void onMyLongClick(int position, View view);
 
 }

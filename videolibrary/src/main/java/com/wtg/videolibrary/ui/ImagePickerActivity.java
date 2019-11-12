@@ -43,6 +43,7 @@ import java.util.List;
 import static android.view.View.GONE;
 import static com.wtg.videolibrary.annotation.MediaTypeAnont.MEDIA_TYPE_IMAGE;
 import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
+import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_POSITION;
 
 /**
  * author: admin 2019/10/31
@@ -136,6 +137,11 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 setResult(ResultCode.RESULT_MEDIA_CODE, intent);
                 finish();
             }
+        }else if (id == R.id.tv_preview){
+            Intent intent = new Intent(this,MediaPreviewActivity.class);
+            intent.putExtra(MEDIA_PARAMS_NAME,(Serializable) imagePickerList);
+            intent.putExtra(MEDIA_PARAMS_POSITION,0);
+            startActivity(intent);
         }
     }
 
@@ -162,6 +168,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         iv_photo_close.setOnClickListener(this);
         ll_select_type.setOnClickListener(this);
         btn_finish.setOnClickListener(this);
+        tv_preview.setOnClickListener(this);
 
         photoTypeAdapter.setOnItemClickListener((position, view) -> {
             if (photoTypePosition == -1) {
@@ -212,6 +219,10 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 }
                 updateFinishButton();
             } else if (id == R.id.view) {//大图跳转预览页面
+                Intent intent = new Intent(this,MediaPreviewActivity.class);
+                intent.putExtra(MEDIA_PARAMS_NAME,(Serializable) photoBeans);
+                intent.putExtra(MEDIA_PARAMS_POSITION,position);
+                startActivity(intent);
             }else {
                 if (photoBean.getHolderType() == MultiHolderTypeAnont.Holder_TYPE_CAMERA) {
                     //跳转拍照页面
