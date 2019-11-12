@@ -92,6 +92,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
     private List<BaseMediaBean> list;
 
     private LoadingDialog loadingDialog;
+
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -137,10 +138,10 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 setResult(ResultCode.RESULT_MEDIA_CODE, intent);
                 finish();
             }
-        }else if (id == R.id.tv_preview){
-            Intent intent = new Intent(this,MediaPreviewActivity.class);
-            intent.putExtra(MEDIA_PARAMS_NAME,(Serializable) imagePickerList);
-            intent.putExtra(MEDIA_PARAMS_POSITION,0);
+        } else if (id == R.id.tv_preview) {
+            Intent intent = new Intent(this, MediaPreviewActivity.class);
+            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
+            intent.putExtra(MEDIA_PARAMS_POSITION, 0);
             startActivity(intent);
         }
     }
@@ -219,11 +220,11 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 }
                 updateFinishButton();
             } else if (id == R.id.view) {//大图跳转预览页面
-                Intent intent = new Intent(this,MediaPreviewActivity.class);
-                intent.putExtra(MEDIA_PARAMS_NAME,(Serializable) photoBeans);
-                intent.putExtra(MEDIA_PARAMS_POSITION,position);
+                Intent intent = new Intent(this, MediaPreviewActivity.class);
+                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) photoBeans);
+                intent.putExtra(MEDIA_PARAMS_POSITION, position);
                 startActivity(intent);
-            }else {
+            } else {
                 if (photoBean.getHolderType() == MultiHolderTypeAnont.Holder_TYPE_CAMERA) {
                     //跳转拍照页面
                     return;
@@ -404,11 +405,12 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         recycler_photo.setAdapter(photoAdapter);
     }
 
-    private void initLoadingDialog(){
-        if (loadingDialog == null){
+    private void initLoadingDialog() {
+        if (loadingDialog == null) {
             loadingDialog = new LoadingDialog(this);
         }
     }
+
     /**
      * 初始化扫描任务
      */
@@ -511,7 +513,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
      * 开启加载弹框
      */
     private void openLoadingDialog() {
-        if (loadingDialog != null && !loadingDialog.isShowing()){
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
             loadingDialog.show();
         }
     }
@@ -521,7 +523,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
      */
     private void closeLoadingDialog() {
         runOnUiThread(() -> {
-            if (loadingDialog != null && loadingDialog.isShowing()){
+            if (loadingDialog != null && loadingDialog.isShowing()) {
                 loadingDialog.dismiss();
             }
         });
@@ -537,14 +539,14 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
             public void run() {
                 for (BaseMediaBean baseMediaBean : imagePickerList) {
                     String filePath;
-                    if (baseMediaBean.getHolderType() == MultiHolderTypeAnont.HOLDER_TYPE_IMAGE){
+                    if (baseMediaBean.getHolderType() == MultiHolderTypeAnont.HOLDER_TYPE_IMAGE) {
                         filePath = SiliCompressor.with(ImagePickerActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT), false);
                         baseMediaBean.setCompressMediaPath(filePath);
-                    }else {
+                    } else {
                         try {
-                            filePath = SiliCompressor.with(ImagePickerActivity.this).compressVideo(baseMediaBean.getPath(), FileUtils.IMAGE_ROOT,0,0,6000000);
+                            filePath = SiliCompressor.with(ImagePickerActivity.this).compressVideo(baseMediaBean.getPath(), FileUtils.IMAGE_ROOT, 0, 0, 6000000);
                             baseMediaBean.setCompressMediaPath(filePath);
-                            Log.e("path",filePath);
+                            Log.e("path", filePath);
                         } catch (URISyntaxException e) {
                             e.printStackTrace();
                         }
