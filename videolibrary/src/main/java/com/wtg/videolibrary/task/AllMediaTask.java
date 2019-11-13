@@ -1,6 +1,7 @@
 package com.wtg.videolibrary.task;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.listener.LoadMediaListener;
@@ -19,6 +20,7 @@ public class AllMediaTask extends BaseMediaTask {
     public AllMediaTask(Context context, LoadMediaListener listener) {
         super(context, listener);
         videoMedia = new VideoMediaImp(mContext);
+        Log.e("type","AllMediaTask");
     }
 
     @Override
@@ -41,7 +43,7 @@ public class AllMediaTask extends BaseMediaTask {
         }
 
         if (mListener != null) {
-            mListener.loadMediaSuccess(MediaHandler.getMediaFolder(mContext, imageFileList, videoFileList));
+            mListener.loadMediaSuccess(MediaHandler.getAllFolder(mContext, imageFileList, videoFileList));
         }
     }
 }

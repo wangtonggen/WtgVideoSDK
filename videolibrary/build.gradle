@@ -69,6 +69,8 @@ dependencies {
 
     //photoView
     api 'com.github.chrisbanes:PhotoView:2.1.4'
+
+    api 'com.otaliastudios:cameraview:2.4.0'
 }
 repositories {
     mavenCentral()

@@ -1,11 +1,16 @@
 package com.wtg.videolibrary.ui;
 
 import android.Manifest;
+import android.content.Intent;
+import android.graphics.Rect;
+import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -23,6 +28,8 @@ import com.wtg.videolibrary.widget.CircleButtonView;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.disposables.Disposable;
 
@@ -30,7 +37,7 @@ import io.reactivex.disposables.Disposable;
  * author: wtg  2019/10/28 0028
  * desc: 拍照/拍视频界面
  */
-public class VideoActivity extends BaseActivity implements View.OnClickListener {
+public class CameraActivity extends BaseActivity implements View.OnClickListener {
     private AutoFitTextureView sv_record;
     private CircleButtonView circleButtonView;
     private AppCompatImageView iv_video_switch;
@@ -53,7 +60,7 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
         iv_video_switch = findViewById(R.id.iv_video_switch);
         iv_video_close = findViewById(R.id.iv_video_close);
 
-        mCameraController = CameraController.getmInstance(this);
+        mCameraController = CameraController.getInstance(this);
         mCameraController.setRecordFinishListener((type, path) -> {
             Log.e("tag",path+"---");
             switch (type){
@@ -62,7 +69,11 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                         @Override
                         public void run() {
                             Log.e("tag",path+"---111");
-                            String filePath= SiliCompressor.with(VideoActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
+                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
+                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            Uri uri = Uri.fromFile(new File(filePath));
+                            intent.setData(uri);
+                            sendBroadcast(intent);
                             Log.e("eee",filePath+"---");
                         }
                     }.start();
@@ -72,7 +83,9 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                         @Override
                         public void run() {
                             try {
-                                String filePath1 = SiliCompressor.with(VideoActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,6000000);
+                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
+                                //通知系统刷新
+                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
                                 Log.e("eee",filePath1+"---filePath1");
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();
@@ -99,7 +112,7 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
 
                             @Override
                             public void onNoMinRecord(int currentTime) {
-                                Toast.makeText(VideoActivity.this,"时间太短了",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CameraActivity.this,"时间太短了",Toast.LENGTH_SHORT).show();
                                 mCameraController.stopRecordingVideo();
                             }
 
@@ -109,9 +122,9 @@ public class VideoActivity extends BaseActivity implements View.OnClickListener 
                             }
                         });
                     }else if (permission.shouldShowRequestPermissionRationale){//未同意但是未勾选不在提醒
-                        showPermissionDialog(VideoActivity.this,"相机和存储");
+                        showPermissionDialog(CameraActivity.this,"相机和存储");
                     }else {//未同意勾选不在提醒
-                        showPermissionDialog(VideoActivity.this,"相机和存储");
+                        showPermissionDialog(CameraActivity.this,"相机和存储");
                     }
                 });
 

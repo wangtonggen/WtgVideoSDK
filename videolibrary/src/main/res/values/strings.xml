@@ -2,6 +2,7 @@
     <string name="app_name">VideoLibrary</string>
 
     <string name="all_media">图片和视频</string>
+    <string name="all_image">所有图片</string>
     <string name="all_video">所有视频</string>
 
     <string name="str_select_music">选择音乐</string>

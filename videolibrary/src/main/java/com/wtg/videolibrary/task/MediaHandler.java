@@ -23,9 +23,21 @@ public class MediaHandler {
     public static final int ALL_VIDEO_FOLDER = -2;//全部视频
 
     /**
+     * 对查询到的所有媒体文件进行分类
+     *
+     * @param context       上下文
+     * @param imageFileList 图片集合
+     * @param videoFileList 视频集合
+     * @return 文件夹
+     */
+    public static ArrayList<FolderBean> getAllFolder(Context context, ArrayList<BaseMediaBean> imageFileList, ArrayList<BaseMediaBean> videoFileList) {
+        return getMediaFolder(context, imageFileList, videoFileList);
+    }
+
+    /**
      * 对查询到的图片进行聚类（相册分类）
      *
-     * @param context 上下文
+     * @param context       上下文
      * @param imageFileList 图片集合
      * @return 文件夹
      */
@@ -33,11 +45,22 @@ public class MediaHandler {
         return getMediaFolder(context, imageFileList, null);
     }
 
+    /**
+     * 对查询到的视频进行聚类（相册分类）
+     *
+     * @param context       上下文
+     * @param videoFileList 图片集合
+     * @return 文件夹
+     */
+    public static ArrayList<FolderBean> getVoideFolder(Context context, ArrayList<BaseMediaBean> videoFileList) {
+        return getMediaFolder(context, null, videoFileList);
+    }
+
 
     /**
      * 对查询到的视频进行聚类（相册分类）
      *
-     * @param context 上下文
+     * @param context       上下文
      * @param imageFileList 视频集合
      * @return 文件夹
      */
@@ -49,7 +72,7 @@ public class MediaHandler {
     /**
      * 对查询到的图片和视频进行聚类（相册分类）
      *
-     * @param context 上下文
+     * @param context       上下文
      * @param imageFileList 图片集合
      * @param videoFileList 视频集合
      * @return 文件夹
@@ -58,7 +81,6 @@ public class MediaHandler {
 
         //根据媒体所在文件夹Id进行聚类（相册）
         SparseArray<FolderBean> sparseArray = new SparseArray<>();
-//        Map<Integer, FolderBean> mediaFolderMap = new HashMap<>();
 
         //全部图片、视频文件
         ArrayList<BaseMediaBean> mediaFileList = new ArrayList<>();
@@ -70,21 +92,20 @@ public class MediaHandler {
         }
 
         //对媒体数据进行排序
-        Collections.sort(mediaFileList, (o1, o2) -> {
-//            if (o1.getDateToken() > o2.getDateToken()) {
-//                return -1;
-//            } else if (o1.getDateToken() < o2.getDateToken()) {
-//                return 1;
-//            } else {
-//                return 0;
-//            }
-            return Long.compare(o2.getDateToken(),o1.getDateToken());
-        });
+        Collections.sort(mediaFileList, (o1, o2) -> Long.compare(o2.getDateToken(), o1.getDateToken()));
 
         //全部图片或视频
         if (!mediaFileList.isEmpty()) {
-            FolderBean allMediaFolder = new FolderBean(ALL_MEDIA_FOLDER, context.getString(R.string.all_media), mediaFileList.get(0).getPath(), mediaFileList);
-            sparseArray.put(ALL_MEDIA_FOLDER, allMediaFolder);
+            if (imageFileList != null && videoFileList != null) {
+                FolderBean allMediaFolder = new FolderBean(ALL_MEDIA_FOLDER, context.getString(R.string.all_media), mediaFileList.get(0).getPath(), mediaFileList);
+                sparseArray.put(ALL_MEDIA_FOLDER, allMediaFolder);
+            } else {
+                if (videoFileList == null) {
+                    FolderBean allMediaFolder = new FolderBean(ALL_MEDIA_FOLDER, context.getString(R.string.all_image), mediaFileList.get(0).getPath(), mediaFileList);
+                    sparseArray.put(ALL_MEDIA_FOLDER, allMediaFolder);
+                }
+            }
+
         }
 
         //全部视频
@@ -113,28 +134,12 @@ public class MediaHandler {
 
         //整理聚类数据
         ArrayList<FolderBean> mediaFolderList = new ArrayList<>();
-        for (int i= 0; i < sparseArray.size();i++){
+        for (int i = 0; i < sparseArray.size(); i++) {
             int key = sparseArray.keyAt(i);
             mediaFolderList.add(sparseArray.get(key));
-//            UserBean user = mUserArray.get(key);
-//            Log.e("key = " + key, user.toString());
         }
-//        for (Integer folderId : mediaFolderMap.keySet()) {
-//            mediaFolderList.add(mediaFolderMap.get(folderId));
-//        }
-
         //按照图片文件夹的数量排序
-        Collections.sort(mediaFolderList, (o1, o2) -> {
-//            if (o1.getMediaFileList().size() > o2.getMediaFileList().size()) {
-//                return -1;
-//            } else if (o1.getMediaFileList().size() < o2.getMediaFileList().size()) {
-//                return 1;
-//            } else {
-//                return 0;
-//            }
-           return Integer.compare(o2.getMediaFileList().size(),o1.getMediaFileList().size());
-        });
-
+        Collections.sort(mediaFolderList, (o1, o2) -> Integer.compare(o2.getMediaFileList().size(), o1.getMediaFileList().size()));
 
         return mediaFolderList;
     }

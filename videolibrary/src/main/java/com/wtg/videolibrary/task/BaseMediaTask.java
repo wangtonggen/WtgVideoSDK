@@ -5,6 +5,8 @@ import android.content.Context;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.listener.LoadMediaListener;
 import com.wtg.videolibrary.utils.image.BaseImageMedia;
+import com.wtg.videolibrary.utils.image.ImageMediaImp;
+import com.wtg.videolibrary.utils.image.VideoMediaImp;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,11 @@ public abstract class BaseMediaTask implements Runnable{
         }
 
         if (mListener != null) {
-            mListener.loadMediaSuccess(MediaHandler.getImageFolder(mContext, mediaBeans));
+            if (baseImageMedia instanceof VideoMediaImp){
+                mListener.loadMediaSuccess(MediaHandler.getVoideFolder(mContext, mediaBeans));
+            }else if (baseImageMedia instanceof ImageMediaImp){
+                mListener.loadMediaSuccess(MediaHandler.getImageFolder(mContext, mediaBeans));
+            }
         }
     }
 

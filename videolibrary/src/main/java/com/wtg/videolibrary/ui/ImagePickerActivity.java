@@ -44,7 +44,6 @@ import java.util.List;
 import static android.view.View.GONE;
 import static com.wtg.videolibrary.annotation.MediaTypeAnont.MEDIA_TYPE_IMAGE;
 import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
-import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_POSITION;
 
 /**
  * author: admin 2019/10/31

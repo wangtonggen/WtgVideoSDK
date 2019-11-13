@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.wtg.videolibrary.R;
 
@@ -15,6 +16,7 @@ public class PhotoHolder extends BaseHolder{
     public AppCompatImageView iv_photo;
     public AppCompatTextView tv_num;
     public AppCompatTextView tv_video_time;
+    public LinearLayout ll_video_time;
     public View view;
 
     public PhotoHolder(@NonNull View itemView) {
@@ -22,6 +24,7 @@ public class PhotoHolder extends BaseHolder{
         iv_photo = itemView.findViewById(R.id.iv_photo);
         tv_num = itemView.findViewById(R.id.tv_num);
         tv_video_time = itemView.findViewById(R.id.tv_video_time);
+        ll_video_time= itemView.findViewById(R.id.ll_video_time);
         view = itemView.findViewById(R.id.view);
 
         itemView.setOnClickListener(this);

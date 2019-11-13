@@ -8,9 +8,8 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.wtg.videolibrary.annotation.MediaTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
-import com.wtg.videolibrary.ui.VideoActivity;
+import com.wtg.videolibrary.ui.CameraActivity;
 import com.wtg.videolibrary.utils.PhotoUtils;
 
 import java.util.ArrayList;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         tv_test.setOnClickListener(v -> PhotoUtils.getInstance().setMaxNum(6).setMinNum(1).setMediaType(mediaType).setOriginalData(cb_original.isChecked()).setOriginalDataList(baseMediaBeans).setCompress(cb_compress.isChecked()).setShowCamera(cb_camera.isChecked()).startImagePicker(this, 1002)
         );
 
-        tv_camera.setOnClickListener(v -> startActivity(new Intent(this, VideoActivity.class)));
+        tv_camera.setOnClickListener(v -> startActivity(new Intent(this, CameraActivity.class)));
     }
 
     @SuppressWarnings("unchecked")

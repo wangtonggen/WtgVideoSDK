@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
         android:scaleType="center"
-        android:src="@mipmap/image"/>
+        android:src="@mipmap/image" />
 
     <View
         android:id="@id/view"
@@ -19,25 +19,37 @@
 
     <android.support.v7.widget.AppCompatTextView
         android:id="@id/tv_num"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
         android:layout_width="@dimen/dimen_recycler_item_select_width"
         android:layout_height="@dimen/dimen_recycler_item_select_height"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
         android:background="@drawable/selector_cb_num"
-        android:textColor="@color/color_white"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:gravity="center"
-        android:textSize="12sp"/>
+        android:textColor="@color/color_white"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.AppCompatTextView
-        android:id="@+id/tv_video_time"
-        android:visibility="invisible"
+    <LinearLayout
+        android:id="@+id/ll_video_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        android:layout_marginBottom="5dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_videocam_white" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_video_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:textColor="@color/color_white"/>
+    </LinearLayout>
 </com.wtg.videolibrary.widget.MyConstraintLayout>

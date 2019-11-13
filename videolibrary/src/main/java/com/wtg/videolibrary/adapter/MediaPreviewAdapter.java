@@ -2,7 +2,6 @@ package com.wtg.videolibrary.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +44,7 @@ public class MediaPreviewAdapter extends BaseAdapter<BaseMediaBean, MediaPreview
             case MultiHolderTypeAnont.HOLDER_TYPE_VIDEO://视频
                 mediaPreviewHolder.video_player.setVisibility(View.VISIBLE);
                 mediaPreviewHolder.iv_image.setVisibility(View.GONE);
-//                Log.e("video_path",photoBean.getPath());
+                Glide.with(mContext).load(photoBean.getPath()).into(mediaPreviewHolder.video_player.thumbImageView);
                 mediaPreviewHolder.video_player.setUp(photoBean.getPath(),"", Jzvd.SCREEN_NORMAL);
                 break;
         }

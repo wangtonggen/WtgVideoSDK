@@ -3,21 +3,21 @@ package com.wtg.videolibrary.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.wtg.videolibrary.R;
-import com.wtg.videolibrary.annotation.MediaTypeAnont;
 import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.holder.BaseHolder;
 import com.wtg.videolibrary.holder.CameraHolder;
 import com.wtg.videolibrary.holder.PhotoHolder;
 
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * author: admin 2019/10/31
@@ -25,7 +25,9 @@ import java.util.List;
  */
 public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
     private List<BaseMediaBean> filePaths;
-
+    //将长度转换为时间
+    private StringBuilder mFormatBuilder = new StringBuilder();
+    private Formatter mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
     public PhotoAdapter(Context context, List<BaseMediaBean> list) {
       super(context,list);
     }
@@ -53,7 +55,8 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
                 PhotoHolder photoHolder = (PhotoHolder) baseHolder;
                 photoHolder.itemView.setTag(i);
                 photoHolder.tv_num.setTag(i);
-                photoHolder.tv_video_time.setVisibility(View.INVISIBLE);
+                photoHolder.tv_num.setVisibility(View.VISIBLE);
+                photoHolder.ll_video_time.setVisibility(View.INVISIBLE);
                 if (photoHolder.iv_photo != null) {
                     Glide.with(mContext).load(photoBean.getPath()).into(photoHolder.iv_photo);
                 }
@@ -76,8 +79,9 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
                 PhotoHolder videoHolder = (PhotoHolder) baseHolder;
                 videoHolder.itemView.setTag(i);
                 videoHolder.tv_num.setTag(i);
-                Log.e("video","videoTime="+photoBean.getDuration());
-                videoHolder.tv_video_time.setVisibility(View.INVISIBLE);
+                videoHolder.tv_num.setVisibility(View.INVISIBLE);
+                videoHolder.ll_video_time.setVisibility(View.VISIBLE);
+                videoHolder.tv_video_time.setText(stringForTime(photoBean.getDuration()));
                 if (videoHolder.iv_photo != null) {
                     Glide.with(mContext).load(photoBean.getPath()).into(videoHolder.iv_photo);
                 }
@@ -120,5 +124,21 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
 
     public void setFilePaths(List<BaseMediaBean> filePaths) {
         this.filePaths = filePaths;
+    }
+
+    //将长度转换为时间
+    private String stringForTime(long timeMs) {
+        long totalSeconds = timeMs / 1000;
+
+        long seconds = totalSeconds % 60;
+        long minutes = (totalSeconds / 60) % 60;
+        long hours = totalSeconds / 3600;
+
+        mFormatBuilder.setLength(0);
+        if (hours > 0) {
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
+        }
     }
 }
