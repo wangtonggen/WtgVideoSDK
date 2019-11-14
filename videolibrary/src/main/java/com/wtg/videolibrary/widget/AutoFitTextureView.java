@@ -14,7 +14,6 @@ public class AutoFitTextureView extends TextureView {
     private int mRatioWidth = 0;
     private int mRatioHeight = 0;
 
-    private Matrix fullScreenTransform;
     public AutoFitTextureView(Context context) {
         this(context, null);
     }
@@ -25,7 +24,6 @@ public class AutoFitTextureView extends TextureView {
 
     public AutoFitTextureView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        fullScreenTransform = new Matrix();
     }
 
     /**
@@ -55,12 +53,6 @@ public class AutoFitTextureView extends TextureView {
                 setMeasuredDimension(height * mRatioWidth / mRatioHeight, height);
             }
         }
-//        setMeasuredDimension(width,height);
-//        fullScreenTransform.reset();
-//        // 宽拉伸，高不变
-//        fullScreenTransform.postScale(height /mRatioHeight,
-//                1f, width * 0.5f, height * 0.5f);
-//        setTransform(fullScreenTransform);
     }
 
 }

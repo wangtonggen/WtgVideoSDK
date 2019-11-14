@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -32,6 +33,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
@@ -51,6 +53,8 @@ import java.util.Locale;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import static android.hardware.camera2.CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES;
+import static android.hardware.camera2.CameraCharacteristics.SCALER_AVAILABLE_MAX_DIGITAL_ZOOM;
 import static android.hardware.camera2.CameraMetadata.CONTROL_AF_STATE_INACTIVE;
 
 /**
@@ -83,6 +87,7 @@ public class CameraController {
 
     private boolean mFlashSupported;
     private int mState = STATE_PREVIEW;
+    private CameraCharacteristics characteristics;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private RecordFinishListener recordFinishListener;
@@ -152,9 +157,6 @@ public class CameraController {
         File mFolder = new File(path);
         if (!mFolder.exists()) {
             mFolder.mkdirs();
-//            Log.d(TAG, "文件夹不存在去创建");
-        } else {
-//            Log.d(TAG, "文件夹已创建");
         }
     }
 
@@ -205,7 +207,6 @@ public class CameraController {
                 // 启动捕获会话
                 // 一旦会话开始，我们就可以更新UI并开始录制
                 mCameraDevice.createCaptureSession(surfaces, new CameraCaptureSession.StateCallback() {
-
                     @Override
                     public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                         mPreviewSession = cameraCaptureSession;
@@ -235,20 +236,6 @@ public class CameraController {
      * 停止录像
      */
     public void stopRecordingVideo() {
-        //获取视频总时长 当大于3s的时候不做处理 小于3s的时候删除并提示视频太短
-//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-//        retriever.setDataSource(mNextVideoAbsolutePath); //在获取前，设置文件路径（应该只能是本地路径）
-//        String duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-//        retriever.release(); //释放
-//        if (!TextUtils.isEmpty(duration)) {
-//            long dur = Long.parseLong(duration);
-//            if (dur / 1000 < 3) {
-//                File file = new File(mNextVideoAbsolutePath);
-//                if (file.exists()) {
-//                    file.delete();
-//                }
-//            }
-//        }
         mMediaRecorder.stop();
         mMediaRecorder.reset();
         recordFinishListener.finish(TYPE.VIDEO, mNextVideoAbsolutePath);
@@ -272,13 +259,11 @@ public class CameraController {
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);//设置输出文件的路径
         mMediaRecorder.setVideoEncodingBitRate(20000000);//设置录制的视频编码比特率
-//        mMediaRecorder.setVideoEncodingBitRate(5*1024*1024);//设置录制的视频编码比特率
         mMediaRecorder.setVideoFrameRate(30);//设置要捕获的视频帧速率
         mMediaRecorder.setVideoSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());//设置要捕获的视频的宽度和高度
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);//设置视频编码器，用于录制
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);//设置audio的编码格式
         int rotation = mActivity.getWindowManager().getDefaultDisplay().getRotation();
-        Log.d(TAG, "setUpMediaRecorder: " + rotation);
 
 
         switch (mSensorOrientation) {
@@ -319,7 +304,6 @@ public class CameraController {
             mState = STATE_WAITING_LOCK;
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
-//            Log.e("tag",e.getMessage());
             e.printStackTrace();
             recordFinishListener.finish(TYPE.IMAGE, null);
         }
@@ -404,6 +388,7 @@ public class CameraController {
         } finally {
             mCameraOpenCloseLock.release();
         }
+
         if (mCameraDevice != null) {
             mCameraDevice.close();
             mCameraDevice = null;
@@ -412,6 +397,11 @@ public class CameraController {
         if (mCaptureSession != null) {
             mCaptureSession.close();
             mCaptureSession = null;
+        }
+
+        if (mCameraDevice != null){
+            mCameraDevice.close();
+            mCameraDevice = null;
         }
 
         if (null != mImageReader) {
@@ -531,11 +521,9 @@ public class CameraController {
                     //预览状态
                     break;
                 }
-
                 case STATE_WAITING_LOCK: {
                     //等待对焦
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
-                    Log.e("eee", afState + "---");
                     if (afState == null) {
                         captureStillPicture();
                     } else if (CONTROL_AF_STATE_INACTIVE == afState) {//不支持自动对焦
@@ -553,12 +541,6 @@ public class CameraController {
                         } else {
                             runPrecaptureSequence();
                         }
-//                        if (aeState == null || aeState == CaptureResult.CONTROL_AE_STATE_CONVERGED) {
-//                            mState = STATE_PICTURE_TAKEN;
-//                            captureStillPicture();
-//                        } else {
-//                            runPrecaptureSequence();
-//                        }
                     }
                     break;
                 }
@@ -629,8 +611,8 @@ public class CameraController {
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    showToast("图片地址: " + mFile);
-                    Log.d(TAG, mFile.toString());
+//                    showToast("图片地址: " + mFile);
+//                    Log.d(TAG, mFile.toString());
                     unlockFocus();
                 }
             };
@@ -641,15 +623,6 @@ public class CameraController {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    private void showToast(final String text) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(mActivity, text, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private int getOrientation(int rotation) {
@@ -670,16 +643,13 @@ public class CameraController {
     private void unlockFocus() {
         try {
             // 重置自动对焦
-            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
-                    CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
+            mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER, CameraMetadata.CONTROL_AF_TRIGGER_CANCEL);
             setAutoFlash(mPreviewRequestBuilder);
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
+            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback, mBackgroundHandler);
             // 将相机恢复正常的预览状态。
             mState = STATE_PREVIEW;
             // 打开连续取景模式
-            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback,
-                    mBackgroundHandler);
+            mCaptureSession.setRepeatingRequest(mPreviewRequest, mCaptureCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -695,8 +665,7 @@ public class CameraController {
                     CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_START);
             // 告诉 mCaptureCallback 等待preapture序列被设置.
             mState = STATE_WAITING_PRECAPTURE;
-            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
-                    mBackgroundHandler);
+            mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -726,8 +695,14 @@ public class CameraController {
             } else {
                 mCameraId = manager.getCameraIdList()[1];
             }
-            CameraCharacteristics characteristics = manager.getCameraCharacteristics(mCameraId);
-            int[] afAvailableModes = characteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);
+            characteristics = manager.getCameraCharacteristics(mCameraId);
+            Float zoom = characteristics.get(SCALER_AVAILABLE_MAX_DIGITAL_ZOOM);
+            if (zoom != null) {
+                maxzoom = zoom * 10;
+            } else {
+                maxzoom = 1;
+            }
+            int[] afAvailableModes = characteristics.get(CONTROL_AF_AVAILABLE_MODES);
             for (int afAvailableMode : afAvailableModes) {
                 Log.e("mode", "afAvailableMode=" + afAvailableMode);
             }
@@ -822,7 +797,7 @@ public class CameraController {
 
             mMediaRecorder = new MediaRecorder();
 
-        } catch (CameraAccessException e) {
+        } catch (Exception e) {
             Log.e("CameraAccessException", e.getMessage());
 
         }
@@ -967,4 +942,61 @@ public class CameraController {
 
     }
 
+    public float finger_spacing = 0;
+    public int zoom_level = 1;
+    public float maxzoom;
+
+    /**
+     * 触摸聚焦
+     *
+     * @param event 点击的时间区域
+     */
+    public void touchFoucs(MotionEvent event) {
+        Log.e("eee",maxzoom+"---"+zoom_level);
+        Rect m = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
+        int action = event.getAction();
+        float current_finger_spacing;
+
+        if (event.getPointerCount() > 1) {
+            // Multi touch logic
+            current_finger_spacing = getFingerSpacing(event);
+            if (finger_spacing != 0) {
+                if (current_finger_spacing > finger_spacing && maxzoom > zoom_level) {
+                    zoom_level++;
+                } else if (current_finger_spacing < finger_spacing && zoom_level > 1) {
+                    zoom_level--;
+                }
+                int minW = (int) (m.width() / maxzoom);
+                int minH = (int) (m.height() / maxzoom);
+                int difW = m.width() - minW;
+                int difH = m.height() - minH;
+                int cropW = difW / 100 *  zoom_level;
+                int cropH = difH / 100 *  zoom_level;
+                cropW -= cropW & 3;
+                cropH -= cropH & 3;
+                Rect zoom = new Rect(cropW, cropH, m.width() - cropW, m.height() - cropH);
+                mPreviewRequestBuilder.set(CaptureRequest.SCALER_CROP_REGION, zoom);
+            }
+            finger_spacing = current_finger_spacing;
+        } else {
+            if (action == MotionEvent.ACTION_UP) {
+                //single touch logic
+            }
+        }
+
+        try {
+            mCaptureSession.setRepeatingRequest(mPreviewRequestBuilder.build(), mCaptureCallback, null);
+        } catch (CameraAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //Determine the space between the first two fingers
+    @SuppressWarnings("deprecation")
+    private float getFingerSpacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float) Math.sqrt(x * x + y * y);
+    }
 }

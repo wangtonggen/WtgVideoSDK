@@ -1,7 +1,9 @@
 package com.wtg.videolibrary.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -37,7 +39,7 @@ import io.reactivex.disposables.Disposable;
  * author: wtg  2019/10/28 0028
  * desc: 拍照/拍视频界面
  */
-public class CameraActivity extends BaseActivity implements View.OnClickListener {
+public class CameraActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener {
     private AutoFitTextureView sv_record;
     private CircleButtonView circleButtonView;
     private AppCompatImageView iv_video_switch;
@@ -48,6 +50,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     public static String BASE_PATH = Environment.getExternalStorageDirectory() + "/AAA";
 
     private boolean isBack = true;
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,6 +133,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
 
         iv_video_switch.setOnClickListener(this);
         iv_video_close.setOnClickListener(this);
+        sv_record.setOnTouchListener(this);
     }
 
 
@@ -144,5 +148,20 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             Toast.makeText(this,"finish",Toast.LENGTH_SHORT).show();
             finish();
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+//        onFocus(new Point((int)event.getX(),(int)event.getY()),this);
+//        mCameraController.touchFoucs(event);
+        return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mCameraController.closeCamera();
+        mCameraController.stopBackgroundThread();
     }
 }
