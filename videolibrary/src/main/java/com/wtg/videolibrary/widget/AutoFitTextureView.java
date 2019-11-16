@@ -1,7 +1,6 @@
 package com.wtg.videolibrary.widget;
 
 import android.content.Context;
-import android.graphics.Matrix;
 import android.util.AttributeSet;
 import android.view.TextureView;
 

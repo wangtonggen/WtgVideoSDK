@@ -258,7 +258,8 @@ public class CameraController {
             mNextVideoAbsolutePath = getVideoFilePath();
         }
         mMediaRecorder.setOutputFile(mNextVideoAbsolutePath);//设置输出文件的路径
-        mMediaRecorder.setVideoEncodingBitRate(20000000);//设置录制的视频编码比特率
+//        mMediaRecorder.setVideoEncodingBitRate(20000000);//设置录制的视频编码比特率
+        mMediaRecorder.setVideoEncodingBitRate(16 * 100000);//设置录制的视频编码比特率
         mMediaRecorder.setVideoFrameRate(30);//设置要捕获的视频帧速率
         mMediaRecorder.setVideoSize(mPreviewSize.getWidth(), mPreviewSize.getHeight());//设置要捕获的视频的宽度和高度
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);//设置视频编码器，用于录制
@@ -402,6 +403,10 @@ public class CameraController {
         if (mCameraDevice != null){
             mCameraDevice.close();
             mCameraDevice = null;
+        }
+
+        if (mMediaRecorder != null){
+            mMediaRecorder.stop();
         }
 
         if (null != mImageReader) {

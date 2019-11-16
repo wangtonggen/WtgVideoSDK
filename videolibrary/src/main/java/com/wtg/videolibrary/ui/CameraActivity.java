@@ -68,34 +68,35 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             Log.e("tag",path+"---");
             switch (type){
                 case IMAGE://图片
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            Log.e("tag",path+"---111");
-                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
-                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-                            Uri uri = Uri.fromFile(new File(filePath));
-                            intent.setData(uri);
-                            sendBroadcast(intent);
-                            Log.e("eee",filePath+"---");
-                        }
-                    }.start();
+                    //在界面上显示拍完的照片查看是否编辑
+//                    new Thread(){
+//                        @Override
+//                        public void run() {
+//                            Log.e("tag",path+"---111");
+//                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
+//                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                            Uri uri = Uri.fromFile(new File(filePath));
+//                            intent.setData(uri);
+//                            sendBroadcast(intent);
+//                            Log.e("eee",filePath+"---");
+//                        }
+//                    }.start();
                     break;
                 case VIDEO://摄像
-                    new Thread(){
-                        @Override
-                        public void run() {
-                            try {
-                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
-                                //通知系统刷新
-                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
-                                Log.e("eee",filePath1+"---filePath1");
-                            } catch (URISyntaxException e) {
-                                e.printStackTrace();
-                                Log.e("wwww",e.getMessage());
-                            }
-                        }
-                    }.start();
+//                    new Thread(){
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
+//                                //通知系统刷新
+//                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
+//                                Log.e("eee",filePath1+"---filePath1");
+//                            } catch (URISyntaxException e) {
+//                                e.printStackTrace();
+//                                Log.e("wwww",e.getMessage());
+//                            }
+//                        }
+//                    }.start();
                     break;
             }
         });

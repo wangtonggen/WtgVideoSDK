@@ -146,7 +146,7 @@ public class CircleButtonView extends View {
                 mStartTime = System.currentTimeMillis();
                 Message mMessage = Message.obtain();
                 mMessage.what = WHAT_LONG_CLICK;
-                mHandler.sendMessageDelayed(mMessage, mLongClickTime);
+                mHandler.sendMessageDelayed(mMessage, 500);
                 break;
             case MotionEvent.ACTION_UP:
                 isPressed = false;
@@ -178,7 +178,7 @@ public class CircleButtonView extends View {
 
     private void startAnimation(float bigStart, float bigEnd, float smallStart, float smallEnd) {
         ValueAnimator bigObjAni = ValueAnimator.ofFloat(bigStart, bigEnd);
-        bigObjAni.setDuration(200);
+        bigObjAni.setDuration(100);
         bigObjAni.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -287,6 +287,9 @@ public class CircleButtonView extends View {
 
         //录制完成
         void onRecordFinishedListener();
+
+        //录制的时长（方便显示录制时间显示）
+//        void onRecordProgress(long progressTime);
     }
 
     public OnLongClickListener onLongClickListener;
