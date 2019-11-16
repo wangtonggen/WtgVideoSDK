@@ -216,6 +216,7 @@ public class CameraController {
                             public void run() {
                                 //开启录像
                                 mMediaRecorder.start();
+                                //开启之后记录时间
                             }
                         });
                     }
