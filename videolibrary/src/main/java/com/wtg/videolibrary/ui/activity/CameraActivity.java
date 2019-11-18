@@ -65,7 +65,6 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
 
         mCameraController = CameraController.getInstance(this);
         mCameraController.setRecordFinishListener((type, path) -> {
-            Log.e("tag",path+"---");
             Intent cameraIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
             Uri uri = Uri.fromFile(new File(path));
             cameraIntent.setData(uri);

@@ -27,6 +27,7 @@ public class PhotoUtils {
     private int maxNum = 9;//选择照片的最大数 默认9
     private int minNum = 1;//选择照片的最小值 默认1
 
+    private Class<?> tClass;
     private PhotoUtils() {
 
     }
@@ -177,6 +178,15 @@ public class PhotoUtils {
      */
     public boolean isOriginalData() {
         return isOriginalData;
+    }
+
+    public PhotoUtils settClass(Class<?> tClass) {
+        this.tClass = tClass;
+        return photoUtils;
+    }
+
+    public Class<?> gettClass() {
+        return tClass;
     }
 
     /**

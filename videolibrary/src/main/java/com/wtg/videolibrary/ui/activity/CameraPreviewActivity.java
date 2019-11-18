@@ -1,18 +1,27 @@
 package com.wtg.videolibrary.ui.activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.iceteck.silicompressorr.SiliCompressor;
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.utils.FileUtils;
+import com.wtg.videolibrary.utils.PhotoUtils;
 import com.wtg.videolibrary.widget.JZVideoPlayerStandardLoopVideo;
+
+import java.io.File;
+import java.net.URISyntaxException;
 
 import cn.jzvd.Jzvd;
 import cn.jzvd.JzvdStd;
@@ -66,8 +75,57 @@ public class CameraPreviewActivity extends BaseActivity {
                     Glide.with(this).load(baseMediaBean.getPath()).into(photoView);
                     break;
             }
-
         }
+
+        iv_cancel.setOnClickListener(v -> finish());
+
+        iv_done.setOnClickListener(v -> {
+            switch (baseMediaBean.getHolderType()){
+                case Holder_TYPE_CAMERA:
+                    break;
+                case HOLDER_TYPE_IMAGE:
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            String filePath= SiliCompressor.with(CameraPreviewActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT),true);
+                            baseMediaBean.setCompressMediaPath(filePath);
+                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                            Uri uri = Uri.fromFile(new File(filePath));
+                            intent.setData(uri);
+                            sendBroadcast(intent);
+                            //跳转
+                            startActivity();
+                        }
+                    }.start();
+                    break;
+                case HOLDER_TYPE_VIDEO:
+                    new Thread(){
+                        @Override
+                        public void run() {
+                            try {
+                                String filePath1 = SiliCompressor.with(CameraPreviewActivity.this).compressVideo(baseMediaBean.getPath(), FileUtils.IMAGE_ROOT,0,0,10000000);
+                                //通知系统刷新
+                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
+                                Log.e("eee",filePath1+"---filePath1");
+                                startActivity();
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                                Log.e("wwww",e.getMessage());
+                            }
+                        }
+                    }.start();
+                    break;
+            }
+        });
+    }
+
+    /**
+     * 开启activity
+     */
+    private void startActivity(){
+        Intent intent = new Intent(this,PhotoUtils.getInstance().gettClass());
+        intent.putExtra("media",baseMediaBean);
+        startActivity(intent);
     }
 
     @Override
