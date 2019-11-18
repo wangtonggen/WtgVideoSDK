@@ -9,7 +9,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.wtg.videolibrary.bean.BaseMediaBean;
-import com.wtg.videolibrary.ui.CameraActivity;
+import com.wtg.videolibrary.ui.activity.CameraActivity;
 import com.wtg.videolibrary.utils.PhotoUtils;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.wtg.videolibrary.ui;
+package com.wtg.videolibrary.ui.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

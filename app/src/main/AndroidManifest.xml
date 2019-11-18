@@ -22,10 +22,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name="com.wtg.videolibrary.ui.ImagePickerActivity" android:screenOrientation="portrait"/>
-        <activity android:name="com.wtg.videolibrary.ui.CameraActivity" android:screenOrientation="portrait"/>
-        <activity android:name="com.wtg.videolibrary.ui.MediaPreviewActivity" android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

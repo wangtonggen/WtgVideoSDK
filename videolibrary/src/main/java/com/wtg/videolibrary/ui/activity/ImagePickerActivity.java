@@ -1,4 +1,4 @@
-package com.wtg.videolibrary.ui;
+package com.wtg.videolibrary.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -407,7 +407,7 @@ public class CameraController {
         }
 
         if (mMediaRecorder != null){
-            mMediaRecorder.stop();
+            mMediaRecorder.release();
         }
 
         if (null != mImageReader) {

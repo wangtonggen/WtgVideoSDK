@@ -51,7 +51,7 @@
             android:id="@+id/circleButtonView"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:maxTime="30"
+            app:maxTime="15"
             app:minTime="3" />
 
     </LinearLayout>

@@ -1,11 +1,8 @@
-package com.wtg.videolibrary.ui;
+package com.wtg.videolibrary.ui.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,7 +18,9 @@ import android.widget.Toast;
 import com.iceteck.silicompressorr.SiliCompressor;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wtg.videolibrary.R;
+import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
+import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.ScreenUtils;
 import com.wtg.videolibrary.widget.AutoFitTextureView;
@@ -30,10 +29,11 @@ import com.wtg.videolibrary.widget.CircleButtonView;
 
 import java.io.File;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.disposables.Disposable;
+
+import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
+import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_VIDEO;
 
 /**
  * author: wtg  2019/10/28 0028
@@ -66,39 +66,55 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         mCameraController = CameraController.getInstance(this);
         mCameraController.setRecordFinishListener((type, path) -> {
             Log.e("tag",path+"---");
+            Intent cameraIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri uri = Uri.fromFile(new File(path));
+            cameraIntent.setData(uri);
+            sendBroadcast(cameraIntent);
+            BaseMediaBean baseMediaBean = new BaseMediaBean();
+            baseMediaBean.setPath(path);
             switch (type){
                 case IMAGE://图片
                     //在界面上显示拍完的照片查看是否编辑
+//                    Intent cameraIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                    Uri uri = Uri.fromFile(new File(path));
+//                    cameraIntent.setData(uri);
+//                    sendBroadcast(cameraIntent);
+
+                    baseMediaBean.setHolderType(HOLDER_TYPE_IMAGE);
 //                    new Thread(){
 //                        @Override
 //                        public void run() {
-//                            Log.e("tag",path+"---111");
-//                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
-//                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                            Uri uri = Uri.fromFile(new File(filePath));
-//                            intent.setData(uri);
-//                            sendBroadcast(intent);
-//                            Log.e("eee",filePath+"---");
+////                            Log.e("tag",path+"---111");
+////                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
+////                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+////                            Uri uri = Uri.fromFile(new File(filePath));
+////                            intent.setData(uri);
+////                            sendBroadcast(intent);
+////                            Log.e("eee",filePath+"---");
 //                        }
 //                    }.start();
                     break;
                 case VIDEO://摄像
+                    baseMediaBean.setHolderType(HOLDER_TYPE_VIDEO);
 //                    new Thread(){
 //                        @Override
 //                        public void run() {
-//                            try {
-//                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
-//                                //通知系统刷新
-//                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
-//                                Log.e("eee",filePath1+"---filePath1");
-//                            } catch (URISyntaxException e) {
-//                                e.printStackTrace();
-//                                Log.e("wwww",e.getMessage());
-//                            }
+////                            try {
+////                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
+////                                //通知系统刷新
+////                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
+////                                Log.e("eee",filePath1+"---filePath1");
+////                            } catch (URISyntaxException e) {
+////                                e.printStackTrace();
+////                                Log.e("wwww",e.getMessage());
+////                            }
 //                        }
 //                    }.start();
                     break;
             }
+            Intent intent = new Intent(CameraActivity.this,CameraPreviewActivity.class);
+            intent.putExtra("media",baseMediaBean);
+            startActivity(intent);
         });
         final RxPermissions rxPermissions = new RxPermissions(this);
         Disposable permissions = rxPermissions.requestEachCombined(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -157,6 +173,16 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
 //        onFocus(new Point((int)event.getX(),(int)event.getY()),this);
 //        mCameraController.touchFoucs(event);
         return true;
+    }
+
+    @Override
+    protected void onResume() {//显示预览 拍摄完成后跳转到预览图片和预览视频的界面
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {//停止相机预览
+        super.onPause();
     }
 
     @Override

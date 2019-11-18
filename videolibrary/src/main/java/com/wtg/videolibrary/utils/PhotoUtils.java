@@ -6,7 +6,7 @@ import android.widget.Toast;
 
 import com.wtg.videolibrary.annotation.MediaTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
-import com.wtg.videolibrary.ui.ImagePickerActivity;
+import com.wtg.videolibrary.ui.activity.ImagePickerActivity;
 
 import java.io.Serializable;
 import java.util.List;
