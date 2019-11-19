@@ -1,4 +1,4 @@
-package com.dsrz.wtgvidosdk;
+package com.dsrz.wtgvidosdk.activity;
 
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -8,6 +8,7 @@ import android.support.v7.widget.AppCompatCheckBox;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.dsrz.wtgvidosdk.R;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.ui.activity.CameraActivity;
 import com.wtg.videolibrary.utils.PhotoUtils;

@@ -19,12 +19,14 @@ import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
  */
 public class PhotoUtils {
     private static PhotoUtils photoUtils;
-    private boolean isShowCamera = false;//默认显示相机
+    private boolean isShowCamera = false;//默认不显示相机
     private int mediaType = MediaTypeAnont.MEDIA_TYPE_ALL;//默认显示所有的类型
     private boolean isCompress = false;//默认压缩
     private boolean isOriginalData = false;//是否有原始数据
+    private boolean isOnlyOneVideo = false;//是否只能选择一个视频
+    private boolean isMixtureSelect = false;//是否可以混合选择（既可以选则图片也可以选择视频）默认是false
     private List<BaseMediaBean> originalDataList;
-    private int maxNum = 9;//选择照片的最大数 默认9
+    private int maxNum = 9;//选择照片的最大值 默认9
     private int minNum = 1;//选择照片的最小值 默认1
 
     private Class<?> tClass;
@@ -154,6 +156,24 @@ public class PhotoUtils {
             intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) originalDataList);
         }
         context.startActivityForResult(intent, requestCode);
+    }
+
+    public boolean isOnlyOneVideo() {
+        return isOnlyOneVideo;
+    }
+
+    public PhotoUtils setOnlyOneVideo(boolean onlyOneVideo) {
+        isOnlyOneVideo = onlyOneVideo;
+        return photoUtils;
+    }
+
+    public boolean isMixtureSelect() {
+        return isMixtureSelect;
+    }
+
+    public PhotoUtils setMixtureSelect(boolean mixtureSelect) {
+        isMixtureSelect = mixtureSelect;
+        return photoUtils;
     }
 
     public List<BaseMediaBean> getOriginalDataList() {

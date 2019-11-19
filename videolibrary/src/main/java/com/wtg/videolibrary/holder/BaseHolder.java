@@ -73,8 +73,8 @@ public abstract class BaseHolder extends RecyclerView.ViewHolder implements View
         this.onLongClickListener = onLongClickListener;
     }
 
-    abstract void onMyClick(int position, View view);
+    public abstract void onMyClick(int position, View view);
 
-    abstract void onMyLongClick(int position, View view);
+    public abstract void onMyLongClick(int position, View view);
 
 }

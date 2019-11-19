@@ -3,12 +3,15 @@ package com.wtg.videolibrary.base;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
 import com.wtg.videolibrary.utils.SystemUtils;
+import com.wtg.videolibrary.utils.common.ActivityManagerUtils;
 
 /**
  * author: wtg  2019/10/28 0028
@@ -17,6 +20,13 @@ import com.wtg.videolibrary.utils.SystemUtils;
 public class BaseActivity extends AppCompatActivity {
 
     protected AlertDialog alertDialog;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActivityManagerUtils.getAppManager().addActivity(this);
+    }
+
     /**
      * 修改状态栏颜色
      */
@@ -26,8 +36,6 @@ public class BaseActivity extends AppCompatActivity {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(getResources().getColor(colorId));
-//            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-//            getWindow().setStatusBarColor(getIntColor(colorId));
         }
     }
 
@@ -69,5 +77,11 @@ public class BaseActivity extends AppCompatActivity {
         alertDialog = builder.create();
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityManagerUtils.getAppManager().finishActivity(this);
     }
 }

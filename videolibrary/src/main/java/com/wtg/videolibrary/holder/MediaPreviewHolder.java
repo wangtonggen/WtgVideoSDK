@@ -23,12 +23,12 @@ public class MediaPreviewHolder extends BaseHolder{
     }
 
     @Override
-    void onMyClick(int position, View view) {
+    public void onMyClick(int position, View view) {
 
     }
 
     @Override
-    void onMyLongClick(int position, View view) {
+    public void onMyLongClick(int position, View view) {
 
     }
 }

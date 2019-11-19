@@ -43,7 +43,9 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
             View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_item_photo, viewGroup, false);
             baseHolder = new PhotoHolder(view);
         }
-        baseHolder.setOnItemClickListener(onItemClickListener);
+        if (onItemClickListener != null){
+            baseHolder.setOnItemClickListener(onItemClickListener);
+        }
         return baseHolder;
     }
 
@@ -79,7 +81,7 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
                 PhotoHolder videoHolder = (PhotoHolder) baseHolder;
                 videoHolder.itemView.setTag(i);
                 videoHolder.tv_num.setTag(i);
-                videoHolder.tv_num.setVisibility(View.INVISIBLE);
+                videoHolder.tv_num.setVisibility(View.VISIBLE);
                 videoHolder.ll_video_time.setVisibility(View.VISIBLE);
                 videoHolder.tv_video_time.setText(stringForTime(photoBean.getDuration()));
                 if (videoHolder.iv_photo != null) {

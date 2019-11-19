@@ -27,12 +27,12 @@ public class PhotoTypeHolder extends BaseHolder{
     }
 
     @Override
-    void onMyClick(int position,View view) {
+    public void onMyClick(int position,View view) {
         onItemClickListener.onItemClickListener(position,view);
     }
 
     @Override
-    void onMyLongClick(int position,View view) {
+    public void onMyLongClick(int position,View view) {
         onLongClickListener.onItemLongClickListener(position,view);
     }
 }

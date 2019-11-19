@@ -43,6 +43,8 @@ import java.util.List;
 
 import static android.view.View.GONE;
 import static com.wtg.videolibrary.annotation.MediaTypeAnont.MEDIA_TYPE_IMAGE;
+import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
+import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_VIDEO;
 import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
 
 /**
@@ -93,6 +95,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
 
     private LoadingDialog loadingDialog;
 
+    private boolean isSelectContinue = true;//选中是否可继续
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,8 +144,6 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         } else if (id == R.id.tv_preview) {
             MediaPreviewUtils.getInstance().setList(imagePickerList);
             Intent intent = new Intent(this, MediaPreviewActivity.class);
-//            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
-//            intent.putExtra(MEDIA_PARAMS_POSITION, 0);
             startActivity(intent);
         }
     }
@@ -199,12 +200,26 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         });
 
         photoAdapter.setOnItemClickListener((position, view) -> {
+            //选中的逻辑判断 首先判断是否是可以混合选 可以的话不做限制 不可以混合选择 判断选择的数据中是不是和正在选择的数据类型一样，一样的话可继续操作，不一样则toast提示
             int id = view.getId();
             BaseMediaBean photoBean = photoBeans.get(position);
             if (id == R.id.tv_num) {//选中取消选中
                 if (photoBean.isSelect()) {
                     imagePickerList.remove(photoBean);
                 } else {
+                    if (!PhotoUtils.getInstance().isMixtureSelect()) {
+                        if (imagePickerList.size() > 0) {
+                            if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_IMAGE && photoBean.getHolderType() != HOLDER_TYPE_IMAGE){
+                                Toast.makeText(ImagePickerActivity.this, "请选择图片类型",Toast.LENGTH_SHORT).show();
+                                return;
+                            }else if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_VIDEO){
+                                if (PhotoUtils.getInstance().isOnlyOneVideo()){
+                                    Toast.makeText(ImagePickerActivity.this, "只能选择一个视频",Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        }
+                    }
                     if (imagePickerList.size() >= PhotoUtils.getInstance().getMaxNum()) {
                         Toast.makeText(ImagePickerActivity.this, String.format("最多可选择%s张", PhotoUtils.getInstance().getMaxNum()), Toast.LENGTH_SHORT).show();
                         return;
@@ -224,8 +239,6 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 MediaPreviewUtils.getInstance().setList(photoBeans);
                 MediaPreviewUtils.getInstance().setPosition(position);
                 Intent intent = new Intent(this, MediaPreviewActivity.class);
-//                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) photoBeans);
-//                intent.putExtra(MEDIA_PARAMS_POSITION, position);
                 startActivity(intent);
             } else {
                 if (photoBean.getHolderType() == MultiHolderTypeAnont.Holder_TYPE_CAMERA) {
@@ -542,7 +555,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
             public void run() {
                 for (BaseMediaBean baseMediaBean : imagePickerList) {
                     String filePath;
-                    if (baseMediaBean.getHolderType() == MultiHolderTypeAnont.HOLDER_TYPE_IMAGE) {
+                    if (baseMediaBean.getHolderType() == HOLDER_TYPE_IMAGE) {
                         filePath = SiliCompressor.with(ImagePickerActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT), false);
                         baseMediaBean.setCompressMediaPath(filePath);
                     } else {

@@ -15,8 +15,8 @@ import java.util.List;
  * desc: adapter 适配器的基类
  */
 public abstract class BaseAdapter<T,VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-    Context mContext;
-    List<T> mList;
+    protected Context mContext;
+    protected List<T> mList;
     public BaseAdapter(Context context, List<T> list) {
         this.mContext = context;
         this.mList = list;
