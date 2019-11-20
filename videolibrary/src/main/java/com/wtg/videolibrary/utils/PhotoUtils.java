@@ -23,7 +23,7 @@ public class PhotoUtils {
     private int mediaType = MediaTypeAnont.MEDIA_TYPE_ALL;//默认显示所有的类型
     private boolean isCompress = false;//默认压缩
     private boolean isOriginalData = false;//是否有原始数据
-    private boolean isOnlyOneVideo = false;//是否只能选择一个视频
+    private boolean isOnlyOneVideo = true;//是否只能选择一个视频
     private boolean isMixtureSelect = false;//是否可以混合选择（既可以选则图片也可以选择视频）默认是false
     private List<BaseMediaBean> originalDataList;
     private int maxNum = 9;//选择照片的最大值 默认9

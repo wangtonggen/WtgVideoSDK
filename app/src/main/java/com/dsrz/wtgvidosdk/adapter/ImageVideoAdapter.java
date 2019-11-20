@@ -54,9 +54,9 @@ public class ImageVideoAdapter extends BaseAdapter<BaseMediaBean, BaseHolder> {
     public void onBindViewHolder(@NonNull BaseHolder viewHolder, int i) {
         if (viewHolder instanceof ImageVideoHolder) {
             ImageVideoHolder imageVideoHolder = (ImageVideoHolder) viewHolder;
-            imageVideoHolder.itemView.setTag(i);
-            imageVideoHolder.iv_delete.setTag(i);
-            BaseMediaBean baseMediaBean = mList.get(i);
+            imageVideoHolder.itemView.setTag(viewHolder.getLayoutPosition());
+            imageVideoHolder.iv_delete.setTag(viewHolder.getLayoutPosition());
+            BaseMediaBean baseMediaBean = mList.get(viewHolder.getLayoutPosition());
             if (baseMediaBean.getHolderType() == MultiHolderTypeAnont.HOLDER_TYPE_IMAGE) {
                 imageVideoHolder.iv_delete.setVisibility(View.VISIBLE);
                 imageVideoHolder.iv_play.setVisibility(View.INVISIBLE);
@@ -68,17 +68,17 @@ public class ImageVideoAdapter extends BaseAdapter<BaseMediaBean, BaseHolder> {
             }
         } else if (viewHolder instanceof AddHolder) {
             AddHolder addHolder = (AddHolder) viewHolder;
-            addHolder.itemView.setTag(i);
+            addHolder.itemView.setTag(viewHolder.getLayoutPosition());
         }
     }
 
     @Override
     public int getItemCount() {
         if (mList.size() == 0) {
-            return mList.size()+1;
+            return mList.size() + 1;
         }
         if (isShowAdd) {
-            return mList.size() < PhotoUtils.getInstance().getMaxNum() ? mList.size() + 1 : mList.size();
+            return mList.size() < 9 ? mList.size() + 1 : mList.size();
         } else {
             return mList.size();
         }

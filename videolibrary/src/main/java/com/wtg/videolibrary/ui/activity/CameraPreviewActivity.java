@@ -16,8 +16,11 @@ import com.iceteck.silicompressorr.SiliCompressor;
 import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.result.ResultCode;
+import com.wtg.videolibrary.utils.CameraUtils;
 import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.PhotoUtils;
+import com.wtg.videolibrary.utils.common.ActivityManagerUtils;
 import com.wtg.videolibrary.widget.JZVideoPlayerStandardLoopVideo;
 
 import java.io.File;
@@ -29,6 +32,7 @@ import cn.jzvd.JzvdStd;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_VIDEO;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.Holder_TYPE_CAMERA;
+import static com.wtg.videolibrary.result.MediaParams.MEDIA_CAMERA;
 
 /**
  * author: wtg  2019/11/18 0018
@@ -82,7 +86,7 @@ public class CameraPreviewActivity extends BaseActivity {
                     new Thread(){
                         @Override
                         public void run() {
-                            String filePath= SiliCompressor.with(CameraPreviewActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT),true);
+                            String filePath= SiliCompressor.with(CameraPreviewActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT),false);
                             baseMediaBean.setCompressMediaPath(filePath);
                             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                             Uri uri = Uri.fromFile(new File(filePath));
@@ -118,9 +122,18 @@ public class CameraPreviewActivity extends BaseActivity {
      * 开启activity
      */
     private void startActivity(){
-        Intent intent = new Intent(this,PhotoUtils.getInstance().gettClass());
-        intent.putExtra("media",baseMediaBean);
-        startActivity(intent);
+        if (CameraUtils.getInstance().getOpenActivity() != null){
+            Intent intent = new Intent(this, CameraUtils.getInstance().getOpenActivity());
+            intent.putExtra("media",baseMediaBean);
+            startActivity(intent);
+            ActivityManagerUtils.getAppManager().finishActivity(CameraActivity.class);
+            finish();
+        }else {
+            Intent intent = new Intent();
+            intent.putExtra(MEDIA_CAMERA, baseMediaBean);
+            setResult(ResultCode.RESULT_MEDIA_CODE,intent);
+            finish();
+        }
     }
 
     @Override

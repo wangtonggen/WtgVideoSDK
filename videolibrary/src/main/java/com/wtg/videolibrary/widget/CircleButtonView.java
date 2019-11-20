@@ -15,6 +15,11 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.wtg.videolibrary.R;
+import com.wtg.videolibrary.utils.CameraUtils;
+
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_ALL;
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_IMAGE;
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_VIDEO;
 
 /**
  * author: admin 2019/10/29
@@ -144,36 +149,59 @@ public class CircleButtonView extends View {
             case MotionEvent.ACTION_DOWN:
                 isPressed = true;
                 mStartTime = System.currentTimeMillis();
-                Message mMessage = Message.obtain();
-                mMessage.what = WHAT_LONG_CLICK;
-                mHandler.sendMessageDelayed(mMessage, 500);
+                switch (CameraUtils.getInstance().getCameraType()){
+                    case CAMERA_IMAGE:
+                        break;
+                    case CAMERA_VIDEO:
+                    case CAMERA_ALL:
+                        Message mMessage = Message.obtain();
+                        mMessage.what = WHAT_LONG_CLICK;
+                        mHandler.sendMessageDelayed(mMessage, 500);
+                        break;
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 isPressed = false;
                 isRecording = false;
                 mEndTime = System.currentTimeMillis();
-                if (mEndTime - mStartTime < mLongClickTime) {
-                    mHandler.removeMessages(WHAT_LONG_CLICK);
-                    if (onClickListener != null)
-                        onClickListener.onClick();
-                } else {
-                    startAnimation(mBigRadius, mInitBitRadius, mSmallRadius, mInitSmallRadius);//手指离开时动画复原
-                    if (mProgressAni != null && mProgressAni.getCurrentPlayTime() / 1000 < mMinTime && !isMaxTime) {
-                        if (onLongClickListener != null) {
-                            onLongClickListener.onNoMinRecord(mMinTime);
+                switch (CameraUtils.getInstance().getCameraType()){
+                    case CAMERA_IMAGE:
+                        if (onClickListener != null)
+                            onClickListener.onClick();
+                        break;
+                    case CAMERA_VIDEO:
+                        loosen();
+                        break;
+                    case CAMERA_ALL:
+                        if (mEndTime - mStartTime < mLongClickTime) {
+                            mHandler.removeMessages(WHAT_LONG_CLICK);
+                            if (onClickListener != null)
+                                onClickListener.onClick();
+                        } else {
+                            loosen();
                         }
-                        mProgressAni.cancel();
-                    } else {
-                        //录制完成
-                        if (onLongClickListener != null && !isMaxTime) {
-                            onLongClickListener.onRecordFinishedListener();
-                        }
-                    }
+                        break;
                 }
                 break;
         }
         return true;
 
+    }
+
+    //松开的
+    private void loosen() {
+        startAnimation(mBigRadius, mInitBitRadius, mSmallRadius, mInitSmallRadius);//手指离开时动画复原
+        if (mProgressAni != null && mProgressAni.getCurrentPlayTime() / 1000 < mMinTime && !isMaxTime) {
+            if (onLongClickListener != null) {
+                onLongClickListener.onNoMinRecord(mMinTime);
+            }
+            mProgressAni.cancel();
+        } else {
+            //录制完成
+            if (onLongClickListener != null && !isMaxTime) {
+                onLongClickListener.onRecordFinishedListener();
+            }
+        }
     }
 
     private void startAnimation(float bigStart, float bigEnd, float smallStart, float smallEnd) {

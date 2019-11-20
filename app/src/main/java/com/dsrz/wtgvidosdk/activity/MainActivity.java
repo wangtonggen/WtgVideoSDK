@@ -5,12 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.support.v7.widget.AppCompatImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.dsrz.wtgvidosdk.R;
+import com.wtg.videolibrary.annotation.CameraAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.ui.activity.CameraActivity;
+import com.wtg.videolibrary.utils.CameraUtils;
 import com.wtg.videolibrary.utils.PhotoUtils;
 
 import java.util.ArrayList;
@@ -26,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     AppCompatCheckBox cb_compress;
     AppCompatCheckBox cb_original;
     AppCompatCheckBox cb_camera;
+    AppCompatImageView iv_image;
     TextView tv_test;
     TextView tv_camera;
     private List<BaseMediaBean> baseMediaBeans = new ArrayList<>();
@@ -36,11 +41,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ///storage/emulated/0/AAA/2019-11-20 09:54:39.jpg
         tv_test = findViewById(R.id.tv_test);
         tv_camera = findViewById(R.id.tv_camera);
         cb_compress = findViewById(R.id.cb_compress);
         cb_original = findViewById(R.id.cb_original);
         cb_camera = findViewById(R.id.cb_camera);
+        iv_image = findViewById(R.id.iv_image);
+        Glide.with(this).load("/storage/emulated/0/AAA/2019-11-20 09:54:39.jpg").into(iv_image);
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId){
@@ -58,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         tv_test.setOnClickListener(v -> PhotoUtils.getInstance().setMaxNum(6).setMinNum(1).setMediaType(mediaType).setOriginalData(cb_original.isChecked()).setOriginalDataList(baseMediaBeans).setCompress(cb_compress.isChecked()).setShowCamera(cb_camera.isChecked()).startImagePicker(this, 1002)
         );
 
-        tv_camera.setOnClickListener(v -> startActivity(new Intent(this, CameraActivity.class)));
+        ;
+        tv_camera.setOnClickListener(v -> CameraUtils.getInstance().setCameraType(CameraAnont.CAMERA_ALL).setOpenActivity(CameraResultActivity.class).startCameraActivity(this));
     }
 
     @SuppressWarnings("unchecked")

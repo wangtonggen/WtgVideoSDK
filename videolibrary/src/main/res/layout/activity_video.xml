@@ -30,11 +30,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="@string/str_button_hint"
         android:textColor="@color/color_white"
         android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@id/ll_button" />

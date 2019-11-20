@@ -1,8 +1,10 @@
 package com.dsrz.wtgvidosdk.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,9 +13,11 @@ import android.widget.Toast;
 
 import com.dsrz.wtgvidosdk.R;
 import com.dsrz.wtgvidosdk.adapter.ImageVideoAdapter;
+import com.wtg.videolibrary.annotation.CameraAnont;
 import com.wtg.videolibrary.annotation.MediaTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.listener.OnItemClickListener;
+import com.wtg.videolibrary.utils.CameraUtils;
 import com.wtg.videolibrary.utils.PhotoUtils;
 
 import java.util.ArrayList;
@@ -22,6 +26,8 @@ import java.util.List;
 import static com.wtg.videolibrary.annotation.MediaTypeAnont.MEDIA_TYPE_ALL;
 import static com.wtg.videolibrary.annotation.MediaTypeAnont.MEDIA_TYPE_IMAGE;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
+import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_VIDEO;
+import static com.wtg.videolibrary.result.MediaParams.MEDIA_CAMERA;
 import static com.wtg.videolibrary.result.MediaParams.MEDIA_PARAMS_NAME;
 
 /**
@@ -34,6 +40,8 @@ public class CameraResultActivity extends AppCompatActivity {
     private ImageVideoAdapter imageVideoAdapter;
 
     private List<BaseMediaBean> baseMediaBeans = new ArrayList<>();
+
+    String[] single_list = {"拍摄", "从相册中选择"};
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,20 +73,25 @@ public class CameraResultActivity extends AppCompatActivity {
             public void onItemClickListener(int position, View view) {
                 int id = view.getId();
                 if (id == R.id.iv_delete) {
+                    if (baseMediaBeans.size() == 1) {
+                        imageVideoAdapter.setShowAdd(true);
+                    }
                     baseMediaBeans.remove(position);
                     imageVideoAdapter.notifyItemRemoved(position);
+                    imageVideoAdapter.notifyItemRangeChanged(0,baseMediaBeans.size()+1);
                 } else {
                     int size = baseMediaBeans.size();
                     if (size < 9 && size > 0) {//小于9
                         if (position == baseMediaBeans.size()) {
-                            //跳转选择照片相册页面
-                            PhotoUtils.getInstance().setMaxNum(9 - baseMediaBeans.size()).setMinNum(1).setMediaType(MEDIA_TYPE_IMAGE).setOriginalDataList(baseMediaBeans).startImagePicker(CameraResultActivity.this, 1002);
+                            //弹出dialog 选择拍摄还是照片
+                            showSingleChoiceDialog(1);
                         } else {
                             //跳转预览界面
                             Toast.makeText(CameraResultActivity.this, "预览界面", Toast.LENGTH_SHORT).show();
                         }
                     } else if (baseMediaBeans.size() == 0) {
-                        PhotoUtils.getInstance().setMaxNum(9 - baseMediaBeans.size()).setMinNum(1).setMediaType(MEDIA_TYPE_ALL).setOriginalDataList(baseMediaBeans).startImagePicker(CameraResultActivity.this, 1002);
+                        //弹出dialog 选择拍摄还是照片
+                        showSingleChoiceDialog(0);
                     } else {//大于等于9
                         //跳转预览界面
                         Toast.makeText(CameraResultActivity.this, "预览界面", Toast.LENGTH_SHORT).show();
@@ -88,6 +101,37 @@ public class CameraResultActivity extends AppCompatActivity {
         });
     }
 
+    private void showSingleChoiceDialog(int type) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("单选对话框");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(single_list, 0, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0://拍摄
+                        if (type == 1) {
+                            CameraUtils.getInstance().setCameraType(CameraAnont.CAMERA_IMAGE).startCameraActivity(CameraResultActivity.this, 1008);
+                        } else {
+                            CameraUtils.getInstance().setCameraType(CameraAnont.CAMERA_ALL).startCameraActivity(CameraResultActivity.this, 1008);
+                        }
+                        break;
+                    case 1://从相册中选则
+                        if (type == 1) {
+                            PhotoUtils.getInstance().setMaxNum(9 - baseMediaBeans.size()).setMinNum(1).setMediaType(MEDIA_TYPE_IMAGE).startImagePicker(CameraResultActivity.this, 1002);
+                        } else {
+                            PhotoUtils.getInstance().setMaxNum(9 - baseMediaBeans.size()).setMinNum(1).setMediaType(MEDIA_TYPE_ALL).startImagePicker(CameraResultActivity.this, 1002);
+                        }
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -95,6 +139,19 @@ public class CameraResultActivity extends AppCompatActivity {
         if (data != null) {
             if (requestCode == 1002) {
                 baseMediaBeans.addAll((ArrayList<BaseMediaBean>) data.getSerializableExtra(MEDIA_PARAMS_NAME));
+                if (PhotoUtils.getInstance().isOnlyOneVideo()) {
+                    if (baseMediaBeans.get(0).getHolderType() == HOLDER_TYPE_VIDEO) {
+                        imageVideoAdapter.setShowAdd(false);
+                    }
+                }
+                imageVideoAdapter.notifyDataSetChanged();
+            } else if (requestCode == 1008) {//从当前打开的页面
+                baseMediaBeans.add((BaseMediaBean) data.getSerializableExtra(MEDIA_CAMERA));
+                if (PhotoUtils.getInstance().isOnlyOneVideo()) {
+                    if (baseMediaBeans.get(0).getHolderType() == HOLDER_TYPE_VIDEO) {
+                        imageVideoAdapter.setShowAdd(false);
+                    }
+                }
                 imageVideoAdapter.notifyDataSetChanged();
             }
         }

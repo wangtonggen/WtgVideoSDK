@@ -7,4 +7,5 @@ package com.wtg.videolibrary.result;
 public class ResultCode {
     //响应码
     public static final int RESULT_MEDIA_CODE = 100088;
+
 }

@@ -9,4 +9,6 @@ public class MediaParams {
     public static final String MEDIA_PARAMS_NAME = "media_list";
     //传递位置的参数名
     public static final String MEDIA_PARAMS_POSITION = "media_position";
+    //传递相应参数的
+    public static final String MEDIA_CAMERA = "media_camera";
 }

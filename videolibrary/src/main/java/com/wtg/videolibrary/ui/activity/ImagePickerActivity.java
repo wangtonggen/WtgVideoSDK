@@ -95,7 +95,6 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
 
     private LoadingDialog loadingDialog;
 
-    private boolean isSelectContinue = true;//选中是否可继续
     @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -209,12 +208,12 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 } else {
                     if (!PhotoUtils.getInstance().isMixtureSelect()) {
                         if (imagePickerList.size() > 0) {
-                            if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_IMAGE && photoBean.getHolderType() != HOLDER_TYPE_IMAGE){
-                                Toast.makeText(ImagePickerActivity.this, "请选择图片类型",Toast.LENGTH_SHORT).show();
+                            if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_IMAGE && photoBean.getHolderType() != HOLDER_TYPE_IMAGE) {
+                                Toast.makeText(ImagePickerActivity.this, "请选择图片类型", Toast.LENGTH_SHORT).show();
                                 return;
-                            }else if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_VIDEO){
-                                if (PhotoUtils.getInstance().isOnlyOneVideo()){
-                                    Toast.makeText(ImagePickerActivity.this, "只能选择一个视频",Toast.LENGTH_SHORT).show();
+                            } else if (imagePickerList.get(0).getHolderType() == HOLDER_TYPE_VIDEO) {
+                                if (PhotoUtils.getInstance().isOnlyOneVideo()) {
+                                    Toast.makeText(ImagePickerActivity.this, "只能选择一个视频", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
                             }

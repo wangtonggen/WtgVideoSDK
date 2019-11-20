@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +22,8 @@ import com.wtg.videolibrary.R;
 import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
+import com.wtg.videolibrary.result.ResultCode;
+import com.wtg.videolibrary.utils.CameraUtils;
 import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.ScreenUtils;
 import com.wtg.videolibrary.widget.AutoFitTextureView;
@@ -32,8 +35,12 @@ import java.net.URISyntaxException;
 
 import io.reactivex.disposables.Disposable;
 
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_ALL;
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_IMAGE;
+import static com.wtg.videolibrary.annotation.CameraAnont.CAMERA_VIDEO;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_IMAGE;
 import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_VIDEO;
+import static com.wtg.videolibrary.result.MediaParams.MEDIA_CAMERA;
 
 /**
  * author: wtg  2019/10/28 0028
@@ -42,6 +49,7 @@ import static com.wtg.videolibrary.annotation.MultiHolderTypeAnont.HOLDER_TYPE_V
 public class CameraActivity extends BaseActivity implements View.OnClickListener, View.OnTouchListener {
     private AutoFitTextureView sv_record;
     private CircleButtonView circleButtonView;
+    private AppCompatTextView tv_hint;
     private AppCompatImageView iv_video_switch;
     private AppCompatImageView iv_video_close;
 
@@ -50,6 +58,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     public static String BASE_PATH = Environment.getExternalStorageDirectory() + "/AAA";
 
     private boolean isBack = true;
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +67,23 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video);
         sv_record = findViewById(R.id.sv_record);
-        sv_record.setAspectRatio(ScreenUtils.getScreenWidth(this),ScreenUtils.getScreenHeight(this));
+        sv_record.setAspectRatio(ScreenUtils.getScreenWidth(this), ScreenUtils.getScreenHeight(this));
         circleButtonView = findViewById(R.id.circleButtonView);
         iv_video_switch = findViewById(R.id.iv_video_switch);
         iv_video_close = findViewById(R.id.iv_video_close);
+        tv_hint = findViewById(R.id.tv_hint);
 
+        switch (CameraUtils.getInstance().getCameraType()){
+            case CAMERA_IMAGE:
+                tv_hint.setText(R.string.str_button_hint_image);
+                break;
+            case CAMERA_VIDEO:
+                tv_hint.setText(R.string.str_button_hint_video);
+                break;
+            case CAMERA_ALL:
+                tv_hint.setText(R.string.str_button_hint_all);
+                break;
+        }
         mCameraController = CameraController.getInstance(this);
         mCameraController.setRecordFinishListener((type, path) -> {
             Intent cameraIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -71,58 +92,30 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
             sendBroadcast(cameraIntent);
             BaseMediaBean baseMediaBean = new BaseMediaBean();
             baseMediaBean.setPath(path);
-            switch (type){
+            switch (type) {
                 case IMAGE://图片
-                    //在界面上显示拍完的照片查看是否编辑
-//                    Intent cameraIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//                    Uri uri = Uri.fromFile(new File(path));
-//                    cameraIntent.setData(uri);
-//                    sendBroadcast(cameraIntent);
-
                     baseMediaBean.setHolderType(HOLDER_TYPE_IMAGE);
-//                    new Thread(){
-//                        @Override
-//                        public void run() {
-////                            Log.e("tag",path+"---111");
-////                            String filePath= SiliCompressor.with(CameraActivity.this).compress(path, new File(FileUtils.IMAGE_ROOT),false);
-////                            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-////                            Uri uri = Uri.fromFile(new File(filePath));
-////                            intent.setData(uri);
-////                            sendBroadcast(intent);
-////                            Log.e("eee",filePath+"---");
-//                        }
-//                    }.start();
                     break;
                 case VIDEO://摄像
                     baseMediaBean.setHolderType(HOLDER_TYPE_VIDEO);
-//                    new Thread(){
-//                        @Override
-//                        public void run() {
-////                            try {
-////                                String filePath1 = SiliCompressor.with(CameraActivity.this).compressVideo(path, FileUtils.IMAGE_ROOT,0,0,10000000);
-////                                //通知系统刷新
-////                                sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
-////                                Log.e("eee",filePath1+"---filePath1");
-////                            } catch (URISyntaxException e) {
-////                                e.printStackTrace();
-////                                Log.e("wwww",e.getMessage());
-////                            }
-//                        }
-//                    }.start();
                     break;
             }
-            Intent intent = new Intent(CameraActivity.this,CameraPreviewActivity.class);
-            intent.putExtra("media",baseMediaBean);
-            startActivity(intent);
+            Intent intent = new Intent(CameraActivity.this, CameraPreviewActivity.class);
+            intent.putExtra("media", baseMediaBean);
+            if (CameraUtils.getInstance().getOpenActivity() != null){
+                startActivity(intent);
+            }else {
+                startActivityForResult(intent,CameraUtils.getInstance().getRequestCode());
+            }
         });
         final RxPermissions rxPermissions = new RxPermissions(this);
-        Disposable permissions = rxPermissions.requestEachCombined(Manifest.permission.CAMERA,Manifest.permission.RECORD_AUDIO,Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE)
+        Disposable permissions = rxPermissions.requestEachCombined(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
                 .subscribe(permission -> {
-                    if (permission.granted){//已经同意
+                    if (permission.granted) {//已经同意
                         mCameraController.setFolderPath(BASE_PATH);
                         mCameraController.InitCamera(sv_record);
                         //预览界面出现时按钮才可以使用
-                        circleButtonView.setOnClickListener(()->mCameraController.takePicture());
+                        circleButtonView.setOnClickListener(() -> mCameraController.takePicture());
                         circleButtonView.setOnLongClickListener(new CircleButtonView.OnLongClickListener() {
                             @Override
                             public void onLongClick() {
@@ -131,7 +124,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
 
                             @Override
                             public void onNoMinRecord(int currentTime) {
-                                Toast.makeText(CameraActivity.this,"时间太短了",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CameraActivity.this, "时间太短了", Toast.LENGTH_SHORT).show();
                                 mCameraController.stopRecordingVideo();
                             }
 
@@ -140,10 +133,10 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                                 mCameraController.stopRecordingVideo();
                             }
                         });
-                    }else if (permission.shouldShowRequestPermissionRationale){//未同意但是未勾选不在提醒
-                        showPermissionDialog(CameraActivity.this,"相机和存储");
-                    }else {//未同意勾选不在提醒
-                        showPermissionDialog(CameraActivity.this,"相机和存储");
+                    } else if (permission.shouldShowRequestPermissionRationale) {//未同意但是未勾选不在提醒
+                        showPermissionDialog(CameraActivity.this, "相机和存储");
+                    } else {//未同意勾选不在提醒
+                        showPermissionDialog(CameraActivity.this, "相机和存储");
                     }
                 });
 
@@ -156,12 +149,12 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.iv_video_switch){
-            Toast.makeText(this,"切换",Toast.LENGTH_SHORT).show();
+        if (id == R.id.iv_video_switch) {
+            Toast.makeText(this, "切换", Toast.LENGTH_SHORT).show();
             isBack = !isBack;
             mCameraController.switchCamera(isBack);
-        }else if (id == R.id.iv_video_close){
-            Toast.makeText(this,"finish",Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.iv_video_close) {
+            Toast.makeText(this, "finish", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -172,6 +165,17 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
 //        onFocus(new Point((int)event.getX(),(int)event.getY()),this);
 //        mCameraController.touchFoucs(event);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (data != null && requestCode == CameraUtils.getInstance().getRequestCode()){
+            Intent intent = new Intent();
+            intent.putExtra(MEDIA_CAMERA,data.getSerializableExtra(MEDIA_CAMERA));
+            setResult(ResultCode.RESULT_MEDIA_CODE,intent);
+            finish();
+        }
     }
 
     @Override
