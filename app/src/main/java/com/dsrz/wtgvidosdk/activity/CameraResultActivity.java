@@ -77,7 +77,7 @@ public class CameraResultActivity extends AppCompatActivity {
                     }
                     baseMediaBeans.remove(position);
                     imageVideoAdapter.notifyItemRemoved(position);
-                    imageVideoAdapter.notifyItemRangeChanged(0,baseMediaBeans.size()+1);
+                    imageVideoAdapter.notifyItemRangeChanged(0, baseMediaBeans.size() + 1);
                 } else {
                     int size = baseMediaBeans.size();
                     if (size < 9 && size > 0) {//小于9
