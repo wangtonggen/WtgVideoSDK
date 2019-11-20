@@ -1,0 +1,18 @@
+# 选择相册和视频的sdk
+
+## 功能要点
+
+1.设置相机配置属性 CameraUtils
+
+  属性 |描述
+|---|---|
+|  openActivity |需要打开的目标activity，类似于微信刚开始发布朋友圈的时候选择拍摄还是相册<br>选择拍摄后跳转的功能 当openActivity为null时则停留在当前的界面并返回拍摄后的数据|
+| requestCode|需要在打开相机的当前页面获取的数据，设置请求码|
+|cameraType|@CameraAnont.CameraType注解下打开相机来设置是否 只拍照、只拍视频、包含所有<br>CAMERA_IMAGE = 0;//只允许拍照 CAMERA_VIDEO = 1;//只允许拍视频 CAMERA_ALL = 2;//允许所有|
+
+
+2.打开相册的配置属性 PhotoUtils
+
+| 属性  |描述
+|---|---|
+|   isShowCamera|

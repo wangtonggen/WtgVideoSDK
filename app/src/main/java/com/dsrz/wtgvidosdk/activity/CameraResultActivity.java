@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.dsrz.wtgvidosdk.R;
 import com.dsrz.wtgvidosdk.adapter.ImageVideoAdapter;
 import com.wtg.videolibrary.annotation.CameraAnont;
-import com.wtg.videolibrary.annotation.MediaTypeAnont;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.listener.OnItemClickListener;
 import com.wtg.videolibrary.utils.CameraUtils;
