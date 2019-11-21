@@ -138,7 +138,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                 openActivity();
             }
         } else if (id == R.id.tv_preview) {
-            if (recycler_photo_type.getVisibility() == View.VISIBLE){
+            if (recycler_photo_type.getVisibility() == View.VISIBLE) {
                 showOrDismissPop();
                 return;
             }
