@@ -42,24 +42,33 @@ public class CameraResultActivity extends AppCompatActivity {
 
     String[] single_list = {"拍摄", "从相册中选择"};
 
+    private List<BaseMediaBean> media_List;
+
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camrea_result);
 
-        baseMediaBean = (BaseMediaBean) getIntent().getSerializableExtra("media");
+        baseMediaBean = (BaseMediaBean) getIntent().getSerializableExtra(MEDIA_CAMERA);
+        media_List = (List<BaseMediaBean>) getIntent().getSerializableExtra(MEDIA_PARAMS_NAME);
+        if (media_List != null) {
+            baseMediaBeans.addAll(media_List);
+        }
+        if (baseMediaBean != null) {
+            baseMediaBeans.add(baseMediaBean);
+        }
         recycler_result = findViewById(R.id.recycler_result);
         recycler_result.setHasFixedSize(true);
         recycler_result.setItemViewCacheSize(20);
         recycler_result.setLayoutManager(new GridLayoutManager(this, 3));
         imageVideoAdapter = new ImageVideoAdapter(this, baseMediaBeans);
-        if (baseMediaBean != null) {
-            if (baseMediaBean.getHolderType() == HOLDER_TYPE_IMAGE) {
+        if (baseMediaBeans != null && baseMediaBeans.size() > 0) {
+            if (baseMediaBeans.get(0).getHolderType() == HOLDER_TYPE_IMAGE) {
                 imageVideoAdapter.setShowAdd(true);
             } else {
                 imageVideoAdapter.setShowAdd(false);
             }
-            baseMediaBeans.add(baseMediaBean);
         }
         recycler_result.setAdapter(imageVideoAdapter);
 

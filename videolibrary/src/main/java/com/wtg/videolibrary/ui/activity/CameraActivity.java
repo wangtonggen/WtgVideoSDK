@@ -9,29 +9,24 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.iceteck.silicompressorr.SiliCompressor;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import com.wtg.videolibrary.R;
-import com.wtg.videolibrary.annotation.MultiHolderTypeAnont;
 import com.wtg.videolibrary.base.BaseActivity;
 import com.wtg.videolibrary.bean.BaseMediaBean;
 import com.wtg.videolibrary.result.ResultCode;
 import com.wtg.videolibrary.utils.CameraUtils;
-import com.wtg.videolibrary.utils.FileUtils;
 import com.wtg.videolibrary.utils.ScreenUtils;
 import com.wtg.videolibrary.widget.AutoFitTextureView;
 import com.wtg.videolibrary.widget.CameraController;
 import com.wtg.videolibrary.widget.CircleButtonView;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import io.reactivex.disposables.Disposable;
 
@@ -73,7 +68,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         iv_video_close = findViewById(R.id.iv_video_close);
         tv_hint = findViewById(R.id.tv_hint);
 
-        switch (CameraUtils.getInstance().getCameraType()){
+        switch (CameraUtils.getInstance().getCameraType()) {
             case CAMERA_IMAGE:
                 tv_hint.setText(R.string.str_button_hint_image);
                 break;
@@ -101,11 +96,11 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                     break;
             }
             Intent intent = new Intent(CameraActivity.this, CameraPreviewActivity.class);
-            intent.putExtra("media", baseMediaBean);
-            if (CameraUtils.getInstance().getOpenActivity() != null){
+            intent.putExtra(MEDIA_CAMERA, baseMediaBean);
+            if (CameraUtils.getInstance().getOpenActivity() != null) {
                 startActivity(intent);
-            }else {
-                startActivityForResult(intent,CameraUtils.getInstance().getRequestCode());
+            } else {
+                startActivityForResult(intent, CameraUtils.getInstance().getRequestCode());
             }
         });
         final RxPermissions rxPermissions = new RxPermissions(this);
@@ -150,11 +145,9 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.iv_video_switch) {
-            Toast.makeText(this, "切换", Toast.LENGTH_SHORT).show();
             isBack = !isBack;
             mCameraController.switchCamera(isBack);
         } else if (id == R.id.iv_video_close) {
-            Toast.makeText(this, "finish", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -170,10 +163,10 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (data != null && requestCode == CameraUtils.getInstance().getRequestCode()){
+        if (data != null && requestCode == CameraUtils.getInstance().getRequestCode()) {
             Intent intent = new Intent();
-            intent.putExtra(MEDIA_CAMERA,data.getSerializableExtra(MEDIA_CAMERA));
-            setResult(ResultCode.RESULT_MEDIA_CODE,intent);
+            intent.putExtra(MEDIA_CAMERA, data.getSerializableExtra(MEDIA_CAMERA));
+            setResult(ResultCode.RESULT_MEDIA_CODE, intent);
             finish();
         }
     }

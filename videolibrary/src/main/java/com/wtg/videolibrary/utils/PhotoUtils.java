@@ -1,6 +1,7 @@
 package com.wtg.videolibrary.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ public class PhotoUtils {
     private int maxNum = 9;//选择照片的最大值 默认9
     private int minNum = 1;//选择照片的最小值 默认1
 
-    private Class<?> tClass;
+    private Class<?> openActivity;
     private PhotoUtils() {
 
     }
@@ -147,6 +148,7 @@ public class PhotoUtils {
      * @param requestCode 请求码
      */
     public void startImagePicker(Activity context, int requestCode) {
+        setOpenActivity(null);
         if (photoUtils.getMaxNum() < photoUtils.getMinNum()) {
             Toast.makeText(context, "maxNum is less than minNum", Toast.LENGTH_SHORT).show();
             return;
@@ -156,6 +158,27 @@ public class PhotoUtils {
             intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) originalDataList);
         }
         context.startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 打开相册（最后调用）
+     *
+     * @param context     上下文
+     */
+    public void startImagePicker(Context context) {
+        if (getOpenActivity() == null) {
+            Toast.makeText(context, "请设置目标activity", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (photoUtils.getMaxNum() < photoUtils.getMinNum()) {
+            Toast.makeText(context, "maxNum is less than minNum", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(context, ImagePickerActivity.class);
+        if (isOriginalData && originalDataList != null) {
+            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) originalDataList);
+        }
+        context.startActivity(intent);
     }
 
     public boolean isOnlyOneVideo() {
@@ -200,13 +223,13 @@ public class PhotoUtils {
         return isOriginalData;
     }
 
-    public PhotoUtils settClass(Class<?> tClass) {
-        this.tClass = tClass;
-        return photoUtils;
+    public Class<?> getOpenActivity() {
+        return openActivity;
     }
 
-    public Class<?> gettClass() {
-        return tClass;
+    public PhotoUtils setOpenActivity(Class<?> openActivity) {
+        this.openActivity = openActivity;
+        return photoUtils;
     }
 
     /**

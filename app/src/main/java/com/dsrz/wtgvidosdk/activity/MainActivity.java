@@ -63,11 +63,13 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         });
-        tv_test.setOnClickListener(v -> PhotoUtils.getInstance().setMaxNum(6).setMinNum(1).setMediaType(mediaType).setOriginalData(cb_original.isChecked()).setOriginalDataList(baseMediaBeans).setCompress(cb_compress.isChecked()).setShowCamera(cb_camera.isChecked()).startImagePicker(this, 1002)
+        tv_test.setOnClickListener(v -> PhotoUtils.getInstance().setMaxNum(6).setMinNum(1).
+                setMediaType(mediaType).setShowCamera(cb_camera.isChecked()).
+                setOpenActivity(CameraResultActivity.class).startImagePicker(this)
         );
 
-        ;
-        tv_camera.setOnClickListener(v -> CameraUtils.getInstance().setCameraType(CameraAnont.CAMERA_ALL).setOpenActivity(CameraResultActivity.class).startCameraActivity(this));
+        tv_camera.setOnClickListener(v -> CameraUtils.getInstance().setCameraType(CameraAnont.CAMERA_ALL).
+                setOpenActivity(CameraResultActivity.class).startCameraActivity(this));
     }
 
     @SuppressWarnings("unchecked")

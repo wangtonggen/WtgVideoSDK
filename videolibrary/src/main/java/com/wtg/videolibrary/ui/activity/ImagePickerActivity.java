@@ -135,15 +135,35 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
             if (PhotoUtils.getInstance().isCompress()) {//压缩的话压缩完在进行传递
                 compressMedia();
             } else {
-                Intent intent = new Intent();
-                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
-                setResult(ResultCode.RESULT_MEDIA_CODE, intent);
-                finish();
+                openActivity();
             }
         } else if (id == R.id.tv_preview) {
-            MediaPreviewUtils.getInstance().setList(imagePickerList);
-            Intent intent = new Intent(this, MediaPreviewActivity.class);
+            if (recycler_photo_type.getVisibility() == View.VISIBLE){
+                showOrDismissPop();
+                return;
+            }
+            if (imagePickerList != null && imagePickerList.size() > 0) {
+                MediaPreviewUtils.getInstance().setList(imagePickerList);
+                Intent intent = new Intent(this, MediaPreviewActivity.class);
+                startActivity(intent);
+            }
+        }
+    }
+
+    /**
+     * 设置打开activity
+     */
+    private void openActivity() {
+        if (PhotoUtils.getInstance().getOpenActivity() == null) {
+            Intent intent = new Intent();
+            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
+            setResult(ResultCode.RESULT_MEDIA_CODE, intent);
+            finish();
+        } else {
+            Intent intent = new Intent(this, PhotoUtils.getInstance().getOpenActivity());
+            intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -568,10 +588,11 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
                     }
                 }
                 closeLoadingDialog();
-                Intent intent = new Intent();
-                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
-                setResult(ResultCode.RESULT_MEDIA_CODE, intent);
-                finish();
+                openActivity();
+//                Intent intent = new Intent();
+//                intent.putExtra(MEDIA_PARAMS_NAME, (Serializable) imagePickerList);
+//                setResult(ResultCode.RESULT_MEDIA_CODE, intent);
+//                finish();
             }
         }.start();
     }

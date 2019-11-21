@@ -124,7 +124,7 @@ public class CameraPreviewActivity extends BaseActivity {
     private void startActivity(){
         if (CameraUtils.getInstance().getOpenActivity() != null){
             Intent intent = new Intent(this, CameraUtils.getInstance().getOpenActivity());
-            intent.putExtra("media",baseMediaBean);
+            intent.putExtra(MEDIA_CAMERA,baseMediaBean);
             startActivity(intent);
             ActivityManagerUtils.getAppManager().finishActivity(CameraActivity.class);
             finish();
