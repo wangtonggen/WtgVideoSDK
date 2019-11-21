@@ -23,13 +23,14 @@ import java.util.Locale;
  * author: admin 2019/10/31
  * desc: 相册的adapter
  */
-public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
+public class PhotoAdapter extends BaseAdapter<BaseMediaBean, BaseHolder> {
     private List<BaseMediaBean> filePaths;
     //将长度转换为时间
     private StringBuilder mFormatBuilder = new StringBuilder();
     private Formatter mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+
     public PhotoAdapter(Context context, List<BaseMediaBean> list) {
-      super(context,list);
+        super(context, list);
     }
 
     @NonNull
@@ -43,7 +44,7 @@ public class PhotoAdapter extends BaseAdapter<BaseMediaBean,BaseHolder> {
             View view = LayoutInflater.from(mContext).inflate(R.layout.recycler_item_photo, viewGroup, false);
             baseHolder = new PhotoHolder(view);
         }
-        if (onItemClickListener != null){
+        if (onItemClickListener != null) {
             baseHolder.setOnItemClickListener(onItemClickListener);
         }
         return baseHolder;

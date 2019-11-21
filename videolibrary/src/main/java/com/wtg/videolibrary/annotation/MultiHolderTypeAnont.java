@@ -15,5 +15,6 @@ public class MultiHolderTypeAnont {
     public static final int Holder_TYPE_CAMERA = 2;
 
     @IntDef({HOLDER_TYPE_VIDEO, HOLDER_TYPE_IMAGE, Holder_TYPE_CAMERA})
-    public @interface MultiHolderType {}
+    public @interface MultiHolderType {
+    }
 }

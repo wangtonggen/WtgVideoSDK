@@ -14,9 +14,10 @@ import java.util.List;
  * author: wtg  2019/11/4 0004
  * desc: adapter 适配器的基类
  */
-public abstract class BaseAdapter<T,VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
+public abstract class BaseAdapter<T, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
     protected Context mContext;
     protected List<T> mList;
+
     public BaseAdapter(Context context, List<T> list) {
         this.mContext = context;
         this.mList = list;

@@ -15,7 +15,7 @@ import com.wtg.videolibrary.utils.image.ImageMediaImp;
 public class ImageMediaTask extends BaseMediaTask {
     public ImageMediaTask(Context context, LoadMediaListener listener) {
         super(context, listener);
-        Log.e("type","ImageMediaTask");
+        Log.e("type", "ImageMediaTask");
     }
 
     @Override

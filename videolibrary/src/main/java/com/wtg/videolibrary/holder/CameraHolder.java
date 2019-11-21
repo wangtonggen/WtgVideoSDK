@@ -12,6 +12,7 @@ import com.wtg.videolibrary.R;
  */
 public class CameraHolder extends BaseHolder {
     public AppCompatTextView tv_num;
+
     public CameraHolder(@NonNull View itemView) {
         super(itemView);
         tv_num = itemView.findViewById(R.id.tv_num);
@@ -20,7 +21,7 @@ public class CameraHolder extends BaseHolder {
 
     @Override
     public void onMyClick(int position, View view) {
-        onItemClickListener.onItemClickListener(position,view);
+        onItemClickListener.onItemClickListener(position, view);
     }
 
     @Override

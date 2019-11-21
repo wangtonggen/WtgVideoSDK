@@ -60,9 +60,10 @@ public class MediaPreviewActivity extends BaseActivity {
 
     /**
      * 跳转到置顶位置
+     *
      * @param linearLayoutManager manager
-     * @param recyclerView recyclerView
-     * @param n 位置
+     * @param recyclerView        recyclerView
+     * @param n                   位置
      */
     private void moveToPosition(LinearLayoutManager linearLayoutManager, RecyclerView recyclerView, int n) {
         int firstItem = linearLayoutManager.findFirstVisibleItemPosition();

@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private List<BaseMediaBean> baseMediaBeans = new ArrayList<>();
 
     private int mediaType = MEDIA_TYPE_ALL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Glide.with(this).load("/storage/emulated/0/AAA/2019-11-20 09:54:39.jpg").into(iv_image);
         radioGroup = findViewById(R.id.radioGroup);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            switch (checkedId){
+            switch (checkedId) {
                 case R.id.rb_all:
                     mediaType = MEDIA_TYPE_ALL;
                     break;

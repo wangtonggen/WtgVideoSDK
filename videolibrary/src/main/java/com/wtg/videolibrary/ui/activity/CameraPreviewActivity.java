@@ -58,14 +58,14 @@ public class CameraPreviewActivity extends BaseActivity {
         iv_cancel = findViewById(R.id.iv_cancel);
         iv_done = findViewById(R.id.iv_done);
 
-        if (baseMediaBean != null){
-            switch (baseMediaBean.getHolderType()){
+        if (baseMediaBean != null) {
+            switch (baseMediaBean.getHolderType()) {
                 case Holder_TYPE_CAMERA:
                     break;
                 case HOLDER_TYPE_VIDEO://视频
                     photoView.setVisibility(View.GONE);
                     video_player.setVisibility(View.VISIBLE);
-                    video_player.setUp(baseMediaBean.getPath(),"", Jzvd.SCREEN_NORMAL);
+                    video_player.setUp(baseMediaBean.getPath(), "", Jzvd.SCREEN_NORMAL);
                     video_player.startVideo();
                     break;
                 case HOLDER_TYPE_IMAGE://图片
@@ -79,14 +79,14 @@ public class CameraPreviewActivity extends BaseActivity {
         iv_cancel.setOnClickListener(v -> finish());
 
         iv_done.setOnClickListener(v -> {
-            switch (baseMediaBean.getHolderType()){
+            switch (baseMediaBean.getHolderType()) {
                 case Holder_TYPE_CAMERA:
                     break;
                 case HOLDER_TYPE_IMAGE:
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
-                            String filePath= SiliCompressor.with(CameraPreviewActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT),false);
+                            String filePath = SiliCompressor.with(CameraPreviewActivity.this).compress(baseMediaBean.getPath(), new File(FileUtils.IMAGE_ROOT), false);
                             baseMediaBean.setCompressMediaPath(filePath);
                             Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                             Uri uri = Uri.fromFile(new File(filePath));
@@ -98,18 +98,18 @@ public class CameraPreviewActivity extends BaseActivity {
                     }.start();
                     break;
                 case HOLDER_TYPE_VIDEO:
-                    new Thread(){
+                    new Thread() {
                         @Override
                         public void run() {
                             try {
-                                String filePath1 = SiliCompressor.with(CameraPreviewActivity.this).compressVideo(baseMediaBean.getPath(), FileUtils.IMAGE_ROOT,0,0,10000000);
+                                String filePath1 = SiliCompressor.with(CameraPreviewActivity.this).compressVideo(baseMediaBean.getPath(), FileUtils.IMAGE_ROOT, 0, 0, 10000000);
                                 //通知系统刷新
                                 sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + new File(filePath1))));
-                                Log.e("eee",filePath1+"---filePath1");
+                                Log.e("eee", filePath1 + "---filePath1");
                                 startActivity();
                             } catch (URISyntaxException e) {
                                 e.printStackTrace();
-                                Log.e("wwww",e.getMessage());
+                                Log.e("wwww", e.getMessage());
                             }
                         }
                     }.start();
@@ -121,17 +121,17 @@ public class CameraPreviewActivity extends BaseActivity {
     /**
      * 开启activity
      */
-    private void startActivity(){
-        if (CameraUtils.getInstance().getOpenActivity() != null){
+    private void startActivity() {
+        if (CameraUtils.getInstance().getOpenActivity() != null) {
             Intent intent = new Intent(this, CameraUtils.getInstance().getOpenActivity());
-            intent.putExtra(MEDIA_CAMERA,baseMediaBean);
+            intent.putExtra(MEDIA_CAMERA, baseMediaBean);
             startActivity(intent);
             ActivityManagerUtils.getAppManager().finishActivity(CameraActivity.class);
             finish();
-        }else {
+        } else {
             Intent intent = new Intent();
             intent.putExtra(MEDIA_CAMERA, baseMediaBean);
-            setResult(ResultCode.RESULT_MEDIA_CODE,intent);
+            setResult(ResultCode.RESULT_MEDIA_CODE, intent);
             finish();
         }
     }
@@ -139,7 +139,7 @@ public class CameraPreviewActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (video_player.getVisibility() == View.VISIBLE){
+        if (video_player.getVisibility() == View.VISIBLE) {
             JzvdStd.goOnPlayOnResume();
         }
     }
@@ -147,7 +147,7 @@ public class CameraPreviewActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (video_player.getVisibility() == View.VISIBLE){
+        if (video_player.getVisibility() == View.VISIBLE) {
             JzvdStd.goOnPlayOnPause();
         }
     }

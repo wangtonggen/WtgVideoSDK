@@ -19,7 +19,7 @@ android {
 
     compileOptions {
         sourceCompatibility var
-         targetCompatibility var1
+        targetCompatibility var1
     }
 }
 

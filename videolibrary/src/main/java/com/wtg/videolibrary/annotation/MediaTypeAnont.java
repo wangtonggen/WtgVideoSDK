@@ -15,5 +15,6 @@ public class MediaTypeAnont {
     public static final int MEDIA_TYPE_ALL = 3;
 
     @IntDef({MEDIA_TYPE_VIDEO, MEDIA_TYPE_IMAGE, MEDIA_TYPE_ALL})
-    public @interface MediaType {}
+    public @interface MediaType {
+    }
 }

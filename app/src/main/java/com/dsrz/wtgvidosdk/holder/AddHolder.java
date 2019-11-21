@@ -13,6 +13,7 @@ import com.wtg.videolibrary.holder.BaseHolder;
  */
 public class AddHolder extends BaseHolder {
     public AppCompatImageView iv_add;
+
     public AddHolder(@NonNull View itemView) {
         super(itemView);
         iv_add = itemView.findViewById(R.id.iv_add);
@@ -22,7 +23,7 @@ public class AddHolder extends BaseHolder {
 
     @Override
     public void onMyClick(int position, View view) {
-        onItemClickListener.onItemClickListener(position,view);
+        onItemClickListener.onItemClickListener(position, view);
     }
 
     @Override

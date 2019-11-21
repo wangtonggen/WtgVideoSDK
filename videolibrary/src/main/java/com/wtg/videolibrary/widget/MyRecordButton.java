@@ -285,12 +285,12 @@ public class MyRecordButton extends View {
                 switch (mRecordMode) {
                     case ORIGIN://初始化
                     case LONG_CLICK://长按 时间设置
-                        if (!mHasCancel){
+                        if (!mHasCancel) {
                             if (mOnRecordStateChangedListener != null) {
                                 mOnRecordStateChangedListener.onRecordStop();
                             }
                             resetLongClick();
-                        }else {
+                        } else {
                             mHasCancel = false;
                         }
                         break;
@@ -356,10 +356,10 @@ public class MyRecordButton extends View {
         this.mRecordMode = mRecordMode;
     }
 
-    public void setRecordBurronConfig(RecordButtonConfig recordButtonConfig){
-       this.mRecordMode = recordButtonConfig.getButton_recode_mode();
-       requestLayout();
-       invalidate();
+    public void setRecordBurronConfig(RecordButtonConfig recordButtonConfig) {
+        this.mRecordMode = recordButtonConfig.getButton_recode_mode();
+        requestLayout();
+        invalidate();
     }
 
     public void reset() {
@@ -538,7 +538,7 @@ public class MyRecordButton extends View {
     class SingleClickRunnable implements Runnable {
         @Override
         public void run() {
-            Log.e("eee","单次点击");
+            Log.e("eee", "单次点击");
             startSingleBeginAnimation();
 //                mRecordMode = RecordMode.LONG_CLICK;
 //            mRecordMode = RecordMode.ORIGIN;

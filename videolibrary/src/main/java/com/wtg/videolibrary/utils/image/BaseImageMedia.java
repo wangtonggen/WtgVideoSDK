@@ -21,9 +21,10 @@ public abstract class BaseImageMedia<T> {
 
     /**
      * 查询数据
+     *
      * @return 数据
      */
-    public ArrayList<T> querySource(){
+    public ArrayList<T> querySource() {
         ArrayList<T> list = new ArrayList<>();
         ContentResolver contentResolver = mContext.getContentResolver();
         Cursor cursor = contentResolver.query(getScanUri(), getProjection(), getSelection(), getSelectionArgs(), getSort());

@@ -47,7 +47,7 @@ public class VideoMediaImp extends BaseImageMedia<BaseMediaBean> {
 
     @Override
     protected String getSort() {
-        return MediaStore.Video.Media.DATE_TAKEN+ " desc";
+        return MediaStore.Video.Media.DATE_TAKEN + " desc";
     }
 
     @Override

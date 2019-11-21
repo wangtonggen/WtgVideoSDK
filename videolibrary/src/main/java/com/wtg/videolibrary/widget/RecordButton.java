@@ -243,7 +243,7 @@ public class RecordButton extends View {
 //        Log.e("haha",mHasCancel+"");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.e("click",mRecordMode+"--");
+                Log.e("click", mRecordMode + "--");
                 if (mRecordMode == RecordMode.ORIGIN && inBeginRange(event)) {
                     mDownRawX = event.getRawX();
                     mDownRawY = event.getRawY();

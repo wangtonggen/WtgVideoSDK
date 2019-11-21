@@ -60,7 +60,8 @@ public class CameraControllerUtils {
     private boolean isBack = true;
     private AutoFitTextureView textureView;
     private Activity context;
-    public void initCamera(Activity context,AutoFitTextureView textureView){
+
+    public void initCamera(Activity context, AutoFitTextureView textureView) {
         this.context = context;
         this.textureView = textureView;
         initCameraManager();
@@ -69,28 +70,29 @@ public class CameraControllerUtils {
         initParams();
     }
 
-    private void initCameraManager(){
-        if (myOnImageAvailableListener == null){
+    private void initCameraManager() {
+        if (myOnImageAvailableListener == null) {
             myOnImageAvailableListener = new MyOnImageAvailableListener();
         }
-        if (cameraStateCallback == null){
+        if (cameraStateCallback == null) {
             cameraStateCallback = new CameraStateCallback();
         }
-        if (context == null){
+        if (context == null) {
             throw new RuntimeException("context is null");
         }
-        if (cameraManager == null){
-            cameraManager = (CameraManager)context.getSystemService(Context.CAMERA_SERVICE);
+        if (cameraManager == null) {
+            cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         }
     }
+
     /**
      * 获取相机id
      */
-    private void getCameraIdList(){
-        if (cameraManager == null){
+    private void getCameraIdList() {
+        if (cameraManager == null) {
             return;
         }
-        if (cameraIdList != null && cameraIdList.length > 0){
+        if (cameraIdList != null && cameraIdList.length > 0) {
             return;
         }
         try {
@@ -103,22 +105,22 @@ public class CameraControllerUtils {
     /**
      * 获取前置和后置摄像头的id
      */
-    private void getCameraId(){
-        if (cameraIdList == null || cameraIdList.length == 0){
+    private void getCameraId() {
+        if (cameraIdList == null || cameraIdList.length == 0) {
             return;
         }
         //摄像头id一斤存在则不要在获取
-        if (!TextUtils.isEmpty(frontCameraId) && !TextUtils.isEmpty(backCameraId)){
+        if (!TextUtils.isEmpty(frontCameraId) && !TextUtils.isEmpty(backCameraId)) {
             return;
         }
         for (String cameraId : cameraIdList) {
             try {
                 CameraCharacteristics cameraCharacteristics = cameraManager.getCameraCharacteristics(cameraId);
                 Integer cameraInt = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING);
-                if (cameraInt == null){
+                if (cameraInt == null) {
                     return;
                 }
-                switch (cameraInt){
+                switch (cameraInt) {
                     case CameraCharacteristics.LENS_FACING_FRONT:
                         frontCameraId = cameraId;
                         frontCameraCharacteristics = cameraCharacteristics;
@@ -140,11 +142,11 @@ public class CameraControllerUtils {
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
 
-    private void initParams(){
+    private void initParams() {
         StreamConfigurationMap map;
-        if (isBack){
+        if (isBack) {
             map = backCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-        }else {
+        } else {
             map = frontCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
         }
         if (map == null) {
@@ -159,9 +161,9 @@ public class CameraControllerUtils {
         mImageReader.setOnImageAvailableListener(myOnImageAvailableListener, mBackgroundHandler);
         //获取手机旋转的角度以调整图片的方向
         int displayRotation = context.getWindowManager().getDefaultDisplay().getRotation();
-        if (isBack){
+        if (isBack) {
             mSensorOrientation = backCameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
-        }else {
+        } else {
             mSensorOrientation = frontCameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
         }
         boolean swappedDimensions = false;
@@ -169,7 +171,7 @@ public class CameraControllerUtils {
         switch (displayRotation) {
             case Surface.ROTATION_0:
             case Surface.ROTATION_180:
-                if (mSensorOrientation != null){
+                if (mSensorOrientation != null) {
                     //横屏
                     if (mSensorOrientation == 90 || mSensorOrientation == 270) {
                         swappedDimensions = true;
@@ -178,7 +180,7 @@ public class CameraControllerUtils {
                 break;
             case Surface.ROTATION_90:
             case Surface.ROTATION_270:
-                if (mSensorOrientation != null){
+                if (mSensorOrientation != null) {
                     //竖屏
                     if (mSensorOrientation == 0 || mSensorOrientation == 180) {
                         swappedDimensions = true;
@@ -274,18 +276,18 @@ public class CameraControllerUtils {
     /**
      * 开启摄像头
      */
-    private void openCamera(){
+    private void openCamera() {
 
     }
 
-    private void closeCamera(){
-        if (cameraDevice != null){
+    private void closeCamera() {
+        if (cameraDevice != null) {
             cameraDevice.close();
             cameraDevice = null;
         }
     }
 
-    public class CameraStateCallback extends CameraDevice.StateCallback{
+    public class CameraStateCallback extends CameraDevice.StateCallback {
         @Override
         public void onOpened(@NonNull CameraDevice camera) {
             cameraDevice = camera;
@@ -305,7 +307,8 @@ public class CameraControllerUtils {
             cameraDevice = null;
         }
     }
-    public class PreviewSurfaceTextureListener implements TextureView.SurfaceTextureListener{
+
+    public class PreviewSurfaceTextureListener implements TextureView.SurfaceTextureListener {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
 
@@ -327,10 +330,10 @@ public class CameraControllerUtils {
         }
     }
 
-    public class MyOnImageAvailableListener implements ImageReader.OnImageAvailableListener{
+    public class MyOnImageAvailableListener implements ImageReader.OnImageAvailableListener {
         @Override
         public void onImageAvailable(ImageReader reader) {
-           Image image =  reader.acquireLatestImage();
+            Image image = reader.acquireLatestImage();
         }
     }
 }

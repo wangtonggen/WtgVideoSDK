@@ -12,14 +12,15 @@ public class MediaPreviewUtils {
     private static MediaPreviewUtils previewUtils;
     private List<BaseMediaBean> list;
     private int position = 0;
-    private MediaPreviewUtils(){
+
+    private MediaPreviewUtils() {
 
     }
 
-    public static MediaPreviewUtils getInstance(){
-        if (previewUtils == null){
-            synchronized (MediaPreviewUtils.class){
-                if (previewUtils == null){
+    public static MediaPreviewUtils getInstance() {
+        if (previewUtils == null) {
+            synchronized (MediaPreviewUtils.class) {
+                if (previewUtils == null) {
                     previewUtils = new MediaPreviewUtils();
                 }
             }
@@ -29,6 +30,7 @@ public class MediaPreviewUtils {
 
     /**
      * 设置是的数据
+     *
      * @return data
      */
     public List<BaseMediaBean> getList() {
@@ -37,6 +39,7 @@ public class MediaPreviewUtils {
 
     /**
      * 需要预览的照片
+     *
      * @param list data
      */
     public void setList(List<BaseMediaBean> list) {
@@ -45,6 +48,7 @@ public class MediaPreviewUtils {
 
     /**
      * 开始预览的位置
+     *
      * @return position
      */
     public int getPosition() {
@@ -53,6 +57,7 @@ public class MediaPreviewUtils {
 
     /**
      * 设置预览的位置
+     *
      * @param position position
      */
     public void setPosition(int position) {

@@ -12,9 +12,10 @@ import cn.jzvd.JzvdStd;
  * author: wtg  2019/11/12 0012
  * desc: 预览holder
  */
-public class MediaPreviewHolder extends BaseHolder{
+public class MediaPreviewHolder extends BaseHolder {
     public JzvdStd video_player;
     public PhotoView iv_image;
+
     public MediaPreviewHolder(@NonNull View itemView) {
         super(itemView);
 

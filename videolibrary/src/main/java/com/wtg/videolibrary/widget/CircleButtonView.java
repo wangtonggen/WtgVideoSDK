@@ -149,7 +149,7 @@ public class CircleButtonView extends View {
             case MotionEvent.ACTION_DOWN:
                 isPressed = true;
                 mStartTime = System.currentTimeMillis();
-                switch (CameraUtils.getInstance().getCameraType()){
+                switch (CameraUtils.getInstance().getCameraType()) {
                     case CAMERA_IMAGE:
                         break;
                     case CAMERA_VIDEO:
@@ -164,7 +164,7 @@ public class CircleButtonView extends View {
                 isPressed = false;
                 isRecording = false;
                 mEndTime = System.currentTimeMillis();
-                switch (CameraUtils.getInstance().getCameraType()){
+                switch (CameraUtils.getInstance().getCameraType()) {
                     case CAMERA_IMAGE:
                         if (onClickListener != null)
                             onClickListener.onClick();

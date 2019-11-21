@@ -13,6 +13,7 @@ import com.yanyusong.y_divideritemdecoration.Y_DividerItemDecoration;
  */
 public class DividerItemDecoration extends Y_DividerItemDecoration {
     private Context mContext;
+
     public DividerItemDecoration(Context context) {
         super(context);
         this.mContext = context;

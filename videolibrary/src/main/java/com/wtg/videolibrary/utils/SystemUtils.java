@@ -26,9 +26,9 @@ public class SystemUtils {
      *
      * @param phoneNum 电话号码
      */
-    public static void dialPhone(Context context,String phoneNum) {
+    public static void dialPhone(Context context, String phoneNum) {
         if (TextUtils.isEmpty(phoneNum)) {
-            Toast.makeText(context,"无手机号",Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "无手机号", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent intent = new Intent(Intent.ACTION_DIAL);
@@ -43,7 +43,7 @@ public class SystemUtils {
      *
      * @param phoneNum 电话号码
      */
-    public static void callPhone(Context context,String phoneNum) {
+    public static void callPhone(Context context, String phoneNum) {
         try {
             Intent intent = new Intent(Intent.ACTION_CALL);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -58,7 +58,7 @@ public class SystemUtils {
     /**
      * 判断是否缺少权限
      */
-    private static boolean lacksPermission(Context context,String permission) {
+    private static boolean lacksPermission(Context context, String permission) {
         return ContextCompat.checkSelfPermission(context, permission) ==
                 PackageManager.PERMISSION_DENIED;
     }
@@ -185,6 +185,7 @@ public class SystemUtils {
 
     /**
      * 复制文本到粘贴板
+     *
      * @param context
      * @param text
      */
@@ -192,23 +193,25 @@ public class SystemUtils {
         ClipboardManager clip = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         //clip.getText(); // 粘贴
         clip.setText(text); // 复制
-        Toast.makeText(context,"复制成功",Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, "复制成功", Toast.LENGTH_SHORT).show();
     }
 
     /**
      * 获取时间戳
+     *
      * @return
      */
-    public static long getTimestamp(){
+    public static long getTimestamp() {
         return System.currentTimeMillis() / 1000;
     }
 
     /**
      * 判断是否打开消息通知
+     *
      * @param context 上下文
      * @return true 打开
      */
-    public static boolean isNotificationEnabled(Context context){
+    public static boolean isNotificationEnabled(Context context) {
         boolean isOpened = false;
         try {
             isOpened = NotificationManagerCompat.from(context).areNotificationsEnabled();
@@ -222,7 +225,7 @@ public class SystemUtils {
     /**
      * 跳转设置界面
      */
-    public static void goSettings(Context context){
+    public static void goSettings(Context context) {
         Intent intent = new Intent();
         if (Build.VERSION.SDK_INT >= 26) {
             // android 8.0引导

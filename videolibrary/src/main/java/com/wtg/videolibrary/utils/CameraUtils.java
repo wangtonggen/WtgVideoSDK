@@ -68,7 +68,7 @@ public class CameraUtils {
     public void startCameraActivity(Activity context, int requestCode) {
         setOpenActivity(null);
         this.requestCode = requestCode;
-        Intent intent = new Intent(context,CameraActivity.class);
+        Intent intent = new Intent(context, CameraActivity.class);
         context.startActivityForResult(intent, requestCode);
     }
 

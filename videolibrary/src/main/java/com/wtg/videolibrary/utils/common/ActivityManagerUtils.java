@@ -67,7 +67,7 @@ public class ActivityManagerUtils {
      * 结束指定类名的Activity
      */
     public void finishActivity(Class<?> cls) {
-        for (int i = 0; i < activityStack.size();i++ ){
+        for (int i = 0; i < activityStack.size(); i++) {
             if (activityStack.get(i).getClass().equals(cls)) {
                 finishActivity(activityStack.get(i));
                 i--;

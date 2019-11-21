@@ -28,14 +28,14 @@ public class MediaPreviewAdapter extends BaseAdapter<BaseMediaBean, MediaPreview
     @NonNull
     @Override
     public MediaPreviewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return new MediaPreviewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_item_media_preview,viewGroup,false));
+        return new MediaPreviewHolder(LayoutInflater.from(mContext).inflate(R.layout.recycler_item_media_preview, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MediaPreviewHolder mediaPreviewHolder, int i) {
         mediaPreviewHolder.itemView.setTag(i);
         BaseMediaBean photoBean = mList.get(i);
-        switch (photoBean.getHolderType()){
+        switch (photoBean.getHolderType()) {
             case MultiHolderTypeAnont.HOLDER_TYPE_IMAGE://图片
                 mediaPreviewHolder.video_player.setVisibility(View.GONE);
                 mediaPreviewHolder.iv_image.setVisibility(View.VISIBLE);
@@ -45,7 +45,7 @@ public class MediaPreviewAdapter extends BaseAdapter<BaseMediaBean, MediaPreview
                 mediaPreviewHolder.video_player.setVisibility(View.VISIBLE);
                 mediaPreviewHolder.iv_image.setVisibility(View.GONE);
                 Glide.with(mContext).load(photoBean.getPath()).into(mediaPreviewHolder.video_player.thumbImageView);
-                mediaPreviewHolder.video_player.setUp(photoBean.getPath(),"", Jzvd.SCREEN_NORMAL);
+                mediaPreviewHolder.video_player.setUp(photoBean.getPath(), "", Jzvd.SCREEN_NORMAL);
                 break;
         }
     }

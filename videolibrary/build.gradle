@@ -31,7 +31,7 @@ android {
     allprojects {
         repositories {
             google()
-            jcenter{url "http://jcenter.bintray.com/"}
+            jcenter { url "http://jcenter.bintray.com/" }
             maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
             maven { url "https://jitpack.io" }
         }

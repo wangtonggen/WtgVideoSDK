@@ -25,12 +25,13 @@ public class LoadingDialog extends Dialog {
     private WindowManager.LayoutParams mLayoutParams;
     private float mDimAmount = 0.5f;//dialog显示后背景变暗的程度
     private int mGravity = Gravity.CENTER;//dialog显示的位置
+
     public LoadingDialog(@NonNull Context context) {
-        this(context,0);
+        this(context, 0);
     }
 
     public LoadingDialog(@NonNull Context context, int themeResId) {
-        super(context,themeResId);
+        super(context, themeResId);
         this.mContext = context;
         initParams();
     }
@@ -38,12 +39,12 @@ public class LoadingDialog extends Dialog {
     /**
      * 初始化数据
      */
-    private void initParams(){
-        mView = LayoutInflater.from(mContext).inflate(R.layout.view_dialog_loading,null);
-        if (mDialogWindow != null && mLayoutParams != null){
+    private void initParams() {
+        mView = LayoutInflater.from(mContext).inflate(R.layout.view_dialog_loading, null);
+        if (mDialogWindow != null && mLayoutParams != null) {
             mDialogWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             mLayoutParams = mDialogWindow.getAttributes();
-            mLayoutParams.width = (int) (ScreenUtils.getScreenWidth(mContext)*0.8);
+            mLayoutParams.width = (int) (ScreenUtils.getScreenWidth(mContext) * 0.8);
             mLayoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT;
             mLayoutParams.gravity = mGravity;
             mLayoutParams.dimAmount = mDimAmount;

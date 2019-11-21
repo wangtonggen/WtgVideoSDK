@@ -14,10 +14,11 @@ import java.util.ArrayList;
  * author: admin 2019/11/7
  * desc: 扫描任务的基类
  */
-public abstract class BaseMediaTask implements Runnable{
+public abstract class BaseMediaTask implements Runnable {
     Context mContext;
     LoadMediaListener mListener;
     BaseImageMedia<BaseMediaBean> baseImageMedia;
+
     BaseMediaTask(Context context, LoadMediaListener listener) {
         this.mContext = context;
         this.mListener = listener;
@@ -27,14 +28,14 @@ public abstract class BaseMediaTask implements Runnable{
     @Override
     public void run() {
         ArrayList<BaseMediaBean> mediaBeans = new ArrayList<>();
-        if (baseImageMedia != null){
+        if (baseImageMedia != null) {
             mediaBeans = baseImageMedia.querySource();
         }
 
         if (mListener != null) {
-            if (baseImageMedia instanceof VideoMediaImp){
+            if (baseImageMedia instanceof VideoMediaImp) {
                 mListener.loadMediaSuccess(MediaHandler.getVoideFolder(mContext, mediaBeans));
-            }else if (baseImageMedia instanceof ImageMediaImp){
+            } else if (baseImageMedia instanceof ImageMediaImp) {
                 mListener.loadMediaSuccess(MediaHandler.getImageFolder(mContext, mediaBeans));
             }
         }

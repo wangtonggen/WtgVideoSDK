@@ -11,11 +11,12 @@ import com.wtg.videolibrary.R;
  * author: admin 2019/11/3
  * desc: 选择类型文件夹的holder
  */
-public class PhotoTypeHolder extends BaseHolder{
+public class PhotoTypeHolder extends BaseHolder {
     public AppCompatImageView iv_photo;
     public AppCompatTextView tv_photo_type;
     public AppCompatTextView tv_photo_num;
     public AppCompatImageView iv_photo_select;
+
     public PhotoTypeHolder(@NonNull View itemView) {
         super(itemView);
         iv_photo = itemView.findViewById(R.id.iv_photo);
@@ -27,12 +28,12 @@ public class PhotoTypeHolder extends BaseHolder{
     }
 
     @Override
-    public void onMyClick(int position,View view) {
-        onItemClickListener.onItemClickListener(position,view);
+    public void onMyClick(int position, View view) {
+        onItemClickListener.onItemClickListener(position, view);
     }
 
     @Override
-    public void onMyLongClick(int position,View view) {
-        onLongClickListener.onItemLongClickListener(position,view);
+    public void onMyLongClick(int position, View view) {
+        onLongClickListener.onItemLongClickListener(position, view);
     }
 }

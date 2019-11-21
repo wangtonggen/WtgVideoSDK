@@ -12,7 +12,7 @@ import com.wtg.videolibrary.R;
  * author: admin 2019/10/31
  * desc: 照片的holder
  */
-public class PhotoHolder extends BaseHolder{
+public class PhotoHolder extends BaseHolder {
     public AppCompatImageView iv_photo;
     public AppCompatTextView tv_num;
     public AppCompatTextView tv_video_time;
@@ -24,7 +24,7 @@ public class PhotoHolder extends BaseHolder{
         iv_photo = itemView.findViewById(R.id.iv_photo);
         tv_num = itemView.findViewById(R.id.tv_num);
         tv_video_time = itemView.findViewById(R.id.tv_video_time);
-        ll_video_time= itemView.findViewById(R.id.ll_video_time);
+        ll_video_time = itemView.findViewById(R.id.ll_video_time);
         view = itemView.findViewById(R.id.view);
 
         itemView.setOnClickListener(this);
@@ -33,12 +33,12 @@ public class PhotoHolder extends BaseHolder{
     }
 
     @Override
-    public void onMyClick(int position,View view) {
-        onItemClickListener.onItemClickListener(position,view);
+    public void onMyClick(int position, View view) {
+        onItemClickListener.onItemClickListener(position, view);
     }
 
     @Override
-    public void onMyLongClick(int position,View view) {
-        onLongClickListener.onItemLongClickListener(position,view);
+    public void onMyLongClick(int position, View view) {
+        onLongClickListener.onItemLongClickListener(position, view);
     }
 }

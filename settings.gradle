@@ -1,2 +1,2 @@
 include ':app', ':videolibrary'
-rootProject.name='WtgVidoSdk'
+rootProject.name = 'WtgVidoSdk'

@@ -17,10 +17,11 @@ import java.util.ArrayList;
  */
 public class AllMediaTask extends BaseMediaTask {
     private BaseImageMedia<BaseMediaBean> videoMedia;
+
     public AllMediaTask(Context context, LoadMediaListener listener) {
         super(context, listener);
         videoMedia = new VideoMediaImp(mContext);
-        Log.e("type","AllMediaTask");
+        Log.e("type", "AllMediaTask");
     }
 
     @Override

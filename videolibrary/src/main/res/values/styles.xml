@@ -20,7 +20,7 @@
 
     <!--加载框动画-->
     <style name="dialog_loading_style" parent="android:Animation">
-        <item name="android:windowEnterAnimation" >@anim/anim_loading_in</item>
-        <item name="android:windowExitAnimation" >@anim/anim_loading_out</item>
+        <item name="android:windowEnterAnimation">@anim/anim_loading_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_loading_out</item>
     </style>
 </resources>

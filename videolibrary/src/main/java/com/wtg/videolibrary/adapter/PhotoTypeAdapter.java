@@ -22,10 +22,10 @@ import java.util.List;
  * author: admin 2019/11/3
  * desc: 选择照片类型的adapter
  */
-public class PhotoTypeAdapter extends BaseAdapter<FolderBean,PhotoTypeHolder> {
+public class PhotoTypeAdapter extends BaseAdapter<FolderBean, PhotoTypeHolder> {
 
     public PhotoTypeAdapter(Context context, List<FolderBean> list) {
-       super(context, list);
+        super(context, list);
     }
 
     @NonNull
@@ -44,6 +44,6 @@ public class PhotoTypeAdapter extends BaseAdapter<FolderBean,PhotoTypeHolder> {
         photoTypeHolder.iv_photo_select.setVisibility(photoTypeBean.isChecked() ? View.VISIBLE : View.INVISIBLE);
         photoTypeHolder.tv_photo_type.setText(photoTypeBean.getFolderName());
         Glide.with(mContext).load(photoTypeBean.getMediaFileList().get(0).getPath()).into(photoTypeHolder.iv_photo);
-        photoTypeHolder.tv_photo_num.setText(String.format("%s",photoTypeBean.getMediaFileList().size()));
+        photoTypeHolder.tv_photo_num.setText(String.format("%s", photoTypeBean.getMediaFileList().size()));
     }
 }

@@ -31,6 +31,7 @@ public class PhotoUtils {
     private int minNum = 1;//选择照片的最小值 默认1
 
     private Class<?> openActivity;
+
     private PhotoUtils() {
 
     }
@@ -163,7 +164,7 @@ public class PhotoUtils {
     /**
      * 打开相册（最后调用）
      *
-     * @param context     上下文
+     * @param context 上下文
      */
     public void startImagePicker(Context context) {
         if (getOpenActivity() == null) {

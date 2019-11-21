@@ -15,6 +15,7 @@ public class ImageVideoHolder extends BaseHolder {
     public AppCompatImageView iv_delete;
     public AppCompatImageView iv_image;
     public AppCompatImageView iv_play;
+
     public ImageVideoHolder(@NonNull View itemView) {
         super(itemView);
 
@@ -28,7 +29,7 @@ public class ImageVideoHolder extends BaseHolder {
 
     @Override
     public void onMyClick(int position, View view) {
-        onItemClickListener.onItemClickListener(position,view);
+        onItemClickListener.onItemClickListener(position, view);
     }
 
     @Override

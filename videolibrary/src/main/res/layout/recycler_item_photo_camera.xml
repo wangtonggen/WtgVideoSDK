@@ -16,6 +16,6 @@
         android:drawablePadding="5dp"
         android:textSize="12sp"
         android:textColor="@color/color_686868"
-        android:text="@string/str_take_photo"/>
+        android:text="@string/str_take_photo" />
 
 </com.wtg.videolibrary.widget.MyConstraintLayout>

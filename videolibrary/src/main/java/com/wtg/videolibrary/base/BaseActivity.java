@@ -59,7 +59,7 @@ public class BaseActivity extends AppCompatActivity {
      *
      * @param message 消息
      */
-    public void showPermissionDialog(Context context,String message) {
+    public void showPermissionDialog(Context context, String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("权限申请");
         builder.setMessage(String.format("在设置-应用-51山克油-权限中开启%s权限，以正常使用51山克油功能", message));

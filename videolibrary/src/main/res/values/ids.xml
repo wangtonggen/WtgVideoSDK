@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--相册列表id-->
-    <item name="recycler_photo" type="id"/>
+    <item name="recycler_photo" type="id" />
     <!--图片的id-->
-    <item name="iv_photo" type="id"/>
+    <item name="iv_photo" type="id" />
     <!--选中提示-->
-    <item name="tv_num" type="id"/>
-    <item name="view" type="id"/>
+    <item name="tv_num" type="id" />
+    <item name="view" type="id" />
 
-    <item name="iv_video_switch" type="id"/>
-    <item name="iv_video_close" type="id"/>
-    <item name="iv_photo_close" type="id"/>
-    <item name="iv_cancel" type="id"/>
-    <item name="iv_done" type="id"/>
-    <item name="iv_image" type="id"/>
+    <item name="iv_video_switch" type="id" />
+    <item name="iv_video_close" type="id" />
+    <item name="iv_photo_close" type="id" />
+    <item name="iv_cancel" type="id" />
+    <item name="iv_done" type="id" />
+    <item name="iv_image" type="id" />
 
-    <item name="video_player" type="id"/>
-    <item name="photoView" type="id"/>
+    <item name="video_player" type="id" />
+    <item name="photoView" type="id" />
 
-    <item name="recycler_preview" type="id"/>
+    <item name="recycler_preview" type="id" />
 </resources>

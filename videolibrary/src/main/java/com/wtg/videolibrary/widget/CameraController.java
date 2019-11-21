@@ -401,12 +401,12 @@ public class CameraController {
             mCaptureSession = null;
         }
 
-        if (mCameraDevice != null){
+        if (mCameraDevice != null) {
             mCameraDevice.close();
             mCameraDevice = null;
         }
 
-        if (mMediaRecorder != null){
+        if (mMediaRecorder != null) {
             mMediaRecorder.release();
         }
 
@@ -958,7 +958,7 @@ public class CameraController {
      * @param event 点击的时间区域
      */
     public void touchFoucs(MotionEvent event) {
-        Log.e("eee",maxzoom+"---"+zoom_level);
+        Log.e("eee", maxzoom + "---" + zoom_level);
         Rect m = characteristics.get(CameraCharacteristics.SENSOR_INFO_ACTIVE_ARRAY_SIZE);
         int action = event.getAction();
         float current_finger_spacing;
@@ -976,8 +976,8 @@ public class CameraController {
                 int minH = (int) (m.height() / maxzoom);
                 int difW = m.width() - minW;
                 int difH = m.height() - minH;
-                int cropW = difW / 100 *  zoom_level;
-                int cropH = difH / 100 *  zoom_level;
+                int cropW = difW / 100 * zoom_level;
+                int cropH = difH / 100 * zoom_level;
                 cropW -= cropW & 3;
                 cropH -= cropH & 3;
                 Rect zoom = new Rect(cropW, cropH, m.width() - cropW, m.height() - cropH);

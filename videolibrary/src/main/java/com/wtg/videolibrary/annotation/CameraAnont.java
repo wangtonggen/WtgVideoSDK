@@ -12,5 +12,6 @@ public class CameraAnont {
     public static final int CAMERA_ALL = 2;//允许所有
 
     @IntDef({CAMERA_IMAGE, CAMERA_VIDEO, CAMERA_ALL})
-    public @interface CameraType {}
+    public @interface CameraType {
+    }
 }
