@@ -434,6 +434,7 @@ public class ImagePickerActivity extends BaseActivity implements View.OnClickLis
         photoAdapter.setHasStableIds(true);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recycler_photo.addItemDecoration(new DividerItemDecoration(this));
+//        recycler_photo.setRecycledViewPool();
         recycler_photo.setLayoutManager(gridLayoutManager);
         recycler_photo.setHasFixedSize(true);
         recycler_photo.setItemViewCacheSize(40);
